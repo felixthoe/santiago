@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<robot name="robot">
+  
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="red">
+    <color rgba="0.7 0 0 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+  <material name="oak">
+    <color rgba="0.84375 0.70703125 0.53515625 1"/>
+  </material>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="base_rotation_joint">
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_height_joint">
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="arm_rotation_joint">
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">  
+      <parameters>$(find gazebo_simulation)/config/controller_manager.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <link name="map" />
+
+  <link name="bed_and_base">
+    <visual>
+      <origin xyz="-0.6 0.175 -0.056329" />
+      <geometry>
+        <box size="0.9 2.184 0.386658"/>      
+      </geometry>
+      <material name="oak"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="2.184 1.033 0.386658"/>      
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0.005"/>
+      <geometry>
+        <box size="0.12 0.12 0.01"/>      
+      </geometry>
+      <material name="oak"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.005"/>
+      <geometry>
+        <box size="0.12 0.12 0.01"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="100.0"/>
+      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name = "map_robot_joint" type = "fixed">
+    <origin xyz="0 0 0"/>
+    <parent link = "map" />
+    <child link = "bed_and_base" />
+  </joint> 
+  
+  <link name="base_cylinder">
+    <visual>
+      <geometry>
+        <cylinder length="0.88" radius="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0.44"/>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.88" radius="0.05"/>
+      </geometry>
+      <origin xyz="0 0 0.44"/>
+    </collision>
+    <inertial>
+      <mass value="17.5"/>
+      <inertia ixx="1.14" ixy="0.0" ixz="0.0" iyy="1.14" iyz="0.0" izz="0.02"/>
+    </inertial>
+  </link>
+
+  <joint name="base_rotation_joint" type="revolute">
+    <parent link="bed_and_base"/>
+    <child link="base_cylinder"/>
+    <origin xyz="0 0 0.01"/>
+    <axis xyz="0 0 1" />
+    <limit effort="1000" lower="-3.141" upper="1.5708" velocity="0.5"/>
+  </joint>
+
+  <link name="arm_connection">
+    <visual>
+      <geometry>
+        <cylinder length="0.1" radius="0.051"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.1" radius="0.051"/>
+      </geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="2.9e-3" ixy="0.0" ixz="0.0" iyy="2.9e-3" iyz="0.0" izz="2.5e-3"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_height_joint" type="prismatic">
+    <parent link="base_cylinder"/>
+    <child link="arm_connection"/>
+    <origin xyz="0 0 0.82" />
+    <limit lower="-0.6" upper="0" velocity="0.5" effort="10"/>
+  </joint>
+
+  <link name="arm_first_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.161204" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.080602"/>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.161204" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.080602"/>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="1.1e-3" ixy="0.0" ixz="0.0" iyy="1.1e-3" iyz="0.0" izz="1e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_rotation_joint" type="revolute">
+    <parent link="arm_connection"/>
+    <child link="arm_first_link"/>
+    <origin xyz="-0.05 0 0" rpy="0 -1.5708 0"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit lower="-1.5708" upper="0" velocity="0.5" effort="10"/> 
+  </joint>
+
+  <link name="arm_second_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.34" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.02 0 0.15"/>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.34" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0.02 0.15"/>
+    </collision>
+    <inertial>
+      <mass value="1.1"/>
+      <inertia ixx="11e-3" ixy="0.0" ixz="0.0" iyy="11e-3" iyz="0.0" izz="2.2e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_first_joint" type="fixed">
+    <parent link="arm_first_link"/>
+    <child link="arm_second_link"/>
+    <origin xyz="0 0 0.161204" rpy="0 -1.5708 0"/>
+  </joint>
+
+  <link name="arm_third_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.757988" radius="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0.378994"/>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.757988" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.378994"/>
+    </collision>
+    <inertial>
+      <mass value="2.4"/>
+      <inertia ixx="0.115" ixy="0.0" ixz="0.0" iyy="0.115" iyz="0.0" izz="4.8e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_second_joint" type="fixed">
+    <parent link="arm_second_link"/>
+    <child link="arm_third_link"/>
+    <origin xyz="0.04 0 0.3" rpy="0 1.5708 0"/>
+  </joint>
+
+  
+  <link name="end_effector" />
+
+  <joint name="end_effector_joint" type="fixed">
+    <parent link="arm_third_link"/>
+    <child link="end_effector"/>
+    <origin xyz="0 0 0.438796" rpy="0 -1.5708 0"/>
+  </joint>
+
+</robot>
+
+
+
