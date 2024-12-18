@@ -50,6 +50,24 @@ def generate_launch_description():
         output='screen'
     )
 
+    # load_base_rotation_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+    #          'base_rotation_controller'],
+    #     output='screen'
+    # )
+
+    # load_arm_height_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+    #          'arm_height_controller'],
+    #     output='screen'
+    # )
+
+    # load_arm_rotation_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+    #          'arm_rotation_controller'],
+    #     output='screen'
+    # )
+
     load_joint_trajectory_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
              'joint_trajectory_controller'],
@@ -64,6 +82,24 @@ def generate_launch_description():
                 on_exit=[load_joint_state_broadcaster],
             )
         ),
+        # RegisterEventHandler(
+        #     event_handler=OnProcessExit(
+        #         target_action=load_joint_state_broadcaster,
+        #         on_exit=[load_base_rotation_controller],
+        #     )
+        # ),
+        # RegisterEventHandler(
+        #     event_handler=OnProcessExit(
+        #         target_action=load_base_rotation_controller,
+        #         on_exit=[load_arm_height_controller],
+        #     )
+        # ),
+        # RegisterEventHandler(
+        #     event_handler=OnProcessExit(
+        #         target_action=load_arm_height_controller,
+        #         on_exit=[load_arm_rotation_controller],
+        #     )
+        # ),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=load_joint_state_broadcaster,
