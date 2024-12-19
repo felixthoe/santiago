@@ -66,11 +66,11 @@ ros2 topic pub /pid_controller/reference control_msgs/msg/MultiDOFCommand "{dof_
 The parameter of the per-joint-PID-controllers used with both controller methods can be adjusted in the config/controller_manager.yaml.
 The current values are not tuned, but chosen rather random (just to see some movement). They are probably too high and cause some osciallations.
 
-### Accesing values of the simulation
+### Accessing values of the simulation
 
 The topic /joint_trajectory_controller/controller_state or /pid_controller/controller_state publishes information about the current position ("feedback") and velocity ("feedback_dot") of the joints, as well as their current reference value (position) and the output of the controller, which is in this case the effective effort of the joint, i.e. torque or force.
 
-### Apllying a wrench in Gazebo
+### Applying a wrench in Gazebo
 
 There is a Node which calls a service from gazebo to apply a wrench to the endeffector of the robot. Run it with
 '''
