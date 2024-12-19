@@ -4,18 +4,27 @@ from launch import LaunchDescription
 from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-
 from launch_ros.actions import Node
 import xacro
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
 
+    # Declare the launch argument for the controller
+    declare_controller_arg = DeclareLaunchArgument(
+        'controller',
+        default_value='pid_controller',
+        description='Controller to be used'
+    )
+
+    # Access the launch configuration value
+    controller = LaunchConfiguration('controller')
+
     # Specify the name of the package and path to urdf file within the package
     pkg_name = 'gazebo_simulation'
     file_subpath = 'urdf/robot.urdf'
-
 
     # Use xacro to process the file
     xacro_file = os.path.join(get_package_share_directory(pkg_name),file_subpath)
@@ -43,67 +52,18 @@ def generate_launch_description():
         output='screen'
     )
 
-
-    load_joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_state_broadcaster'],
-        output='screen'
-    )
-
-    # load_base_rotation_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #          'base_rotation_controller'],
-    #     output='screen'
-    # )
-
-    # load_arm_height_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #          'arm_height_controller'],
-    #     output='screen'
-    # )
-
-    # load_arm_rotation_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-    #          'arm_rotation_controller'],
-    #     output='screen'
-    # )
-
-    load_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
-             'joint_trajectory_controller'],
+    load_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', controller],
         output='screen'
     )
 
     # Run the node
     return LaunchDescription([
+        declare_controller_arg,
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=spawn_entity,
-                on_exit=[load_joint_state_broadcaster],
-            )
-        ),
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_joint_state_broadcaster,
-        #         on_exit=[load_base_rotation_controller],
-        #     )
-        # ),
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_base_rotation_controller,
-        #         on_exit=[load_arm_height_controller],
-        #     )
-        # ),
-        # RegisterEventHandler(
-        #     event_handler=OnProcessExit(
-        #         target_action=load_arm_height_controller,
-        #         on_exit=[load_arm_rotation_controller],
-        #     )
-        # ),
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=load_joint_state_broadcaster,
-                on_exit=[load_joint_trajectory_controller],
+                on_exit=[load_controller],
             )
         ),
         gazebo,

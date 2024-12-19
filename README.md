@@ -1,18 +1,18 @@
-## gazebo_simulation
+# gazebo_simulation
 
 
 ## Installation
 
 Developed on Ubuntu 22.04.5 LTS ("Jammy") with ROS2 humble and Gazebo Fortress LTS (see here for a version overview https://gazebosim.org/docs/latest/ros_installation/).
 
-# ROS2 Installation
+### ROS2 Installation
 Follow the installation instructions from the ROS2 humble Docs: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 '''
 sudo apt update
 sudo apt-get install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-xacro
 '''
 
-# Gazebo Installation
+### Gazebo Installation
 Follow the installation instructions from the Gazebo Docs: https://gazebosim.org/docs/fortress/install/
 '''
 sudo apt-get install ros-humble-gazebo-ros-pkgs ros-humble-gazebo-ros2-control
@@ -20,7 +20,7 @@ sudo apt-get install ros-humble-gazebo-ros-pkgs ros-humble-gazebo-ros2-control
 
 ## Usage
 
-# Basic Usage
+### Basic Usage
 
 As always (from the root of your ROS2 workspace)
 '''
@@ -61,16 +61,16 @@ ros2 topic pub /joint_trajectory_controller/joint_trajectory trajectory_msgs/msg
 ros2 topic pub /pid_controller/reference control_msgs/msg/MultiDOFCommand "{dof_names: ['base_rotation_joint', 'arm_height_joint', 'arm_rotation_joint'], values: [.0, .0, .0]}"
 '''
 
-# PID parameter
+### PID parameter
 
 The parameter of the per-joint-PID-controllers used with both controller methods can be adjusted in the config/controller_manager.yaml.
 The current values are not tuned, but chosen rather random (just to see some movement). They are probably too high and cause some osciallations.
 
-# Accesing values of the simulation
+### Accesing values of the simulation
 
 The topic /joint_trajectory_controller/controller_state or /pid_controller/controller_state publishes information about the current position ("feedback") and velocity ("feedback_dot") of the joints, as well as their current reference value (position) and the output of the controller, which is in this case the effective effort of the joint, i.e. torque or force.
 
-# Apllying a wrench in gazebo
+### Apllying a wrench in Gazebo
 
 There is a Node which calls a service from gazebo to apply a wrench to the endeffector of the robot. Run it with
 '''
