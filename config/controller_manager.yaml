@@ -23,13 +23,13 @@ joint_trajectory_controller:
         i: 2.0
         d: 20.0
       arm_height_joint:
-        p: 500.0
-        i: 5.0
-        d: 50.0
+        p: 950.0
+        i: 50.0
+        d: 250.0
       arm_rotation_joint:
-        p: 200.0
-        i: 2.0
-        d: 20.0
+        p: 1000.0
+        i: 50.0
+        d: 50.0
     command_interfaces:
       - effort
     state_interfaces:
