@@ -50,8 +50,8 @@ https://control.ros.org/humble/doc/ros2_controllers/pid_controller/doc/userdoc.h
 
 There are two publisher nodes, which publish some test signals to the corresponding controller. They can be started with the corresponding command:
 ```
-ros2 run gazebo_simulation trajectory_publisher.py
-ros2 run gazebo_simulation pid_controller_publisher.py
+ros2 run gazebo_simulation trajectory_publisher
+ros2 run gazebo_simulation pid_controller_publisher
 ```
 They can be used to implement own reference values/trajectories.
 
@@ -64,7 +64,7 @@ ros2 topic pub /pid_controller/reference control_msgs/msg/MultiDOFCommand "{dof_
 ### PID parameter
 
 The parameter of the per-joint-PID-controllers used with both controller methods can be adjusted in the config/controller_manager.yaml.
-The current values are not tuned, but chosen rather random (just to see some movement). They are probably too high and cause some osciallations.
+The current values are tuned heuristically, based on the step response.
 
 ### Accessing values of the simulation
 
