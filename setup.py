@@ -30,6 +30,8 @@ setup(
             'pid_controller_publisher = gazebo_simulation.pid_controller_publisher:main',
             'apply_wrench = gazebo_simulation.apply_wrench:main',
             'listener = gazebo_simulation.listener:main',
+            'trajectory_santiago = gazebo_simulation.trajectory_santiago_test_simple_cfg_space_positions:main',
+            'trajectory_santiago_one = gazebo_simulation.trajectory_santiago_test_simple_cfg_space_positions_onemessage:main',
         ],
     },
 )

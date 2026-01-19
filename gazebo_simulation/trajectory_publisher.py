@@ -32,6 +32,7 @@ class TrajectoryPublisher(Node):
         # self.get_logger().info('Publishing: "%s"' % msg)
 
 def main(args=None):
+    print("TrajectoryPublisher node started")
     rclpy.init(args=args)
     trajectory_publisher = TrajectoryPublisher()
     rclpy.spin(trajectory_publisher)
