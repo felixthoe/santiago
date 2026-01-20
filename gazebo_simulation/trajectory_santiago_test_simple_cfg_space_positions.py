@@ -35,36 +35,35 @@ class TrajectoryPublisherSantiago(Node):
 
         # Compute positions
         if self.i < self.pub_max_iterations_one_third:
-            a = self.i / self.pub_max_iterations_one_third
+            a = self.i / max(1, (self.pub_max_iterations_one_third - 1))
             positions = [
-                a * math.pi * 0.0,
-                0 + a * -0.25,
-                a * math.pi * -0.5
+                0.5 * math.pi + a * (-0.5 * math.pi),    # J1: pi/2 -> 0
+                0.0 + a * (-0.4),                        # J2: 0 -> -0.4
+                0.0 + a * (-0.5 * math.pi)               # J3: 0 -> -pi/2
             ]
 
         elif self.i < self.pub_max_iterations_two_thirds:
-            a = (self.i - self.pub_max_iterations_one_third) / (
-                self.pub_max_iterations_two_thirds - self.pub_max_iterations_one_third
-            )
+            phase_len = self.pub_max_iterations_two_thirds - self.pub_max_iterations_one_third
+            a = (self.i - self.pub_max_iterations_one_third) / max(1, (phase_len - 1))
             positions = [
-                math.pi * 0.5 * (1 - a),
-                -0.1 - a * 0.2,
-                math.pi * 0.5 * (1 - a)
+                0.0,                                    # J1: hold at 0
+                -0.4 + a * (0.4),                       # J2: -0.4 -> 0
+                -0.5 * math.pi + a * (-0.5 * math.pi)   # J3: -pi/2 -> -pi
             ]
 
         elif self.i <= self.pub_max_iterations:
-            a = (self.i - self.pub_max_iterations_two_thirds) / (
-                self.pub_max_iterations - self.pub_max_iterations_two_thirds
-            )
+            phase_len = self.pub_max_iterations - self.pub_max_iterations_two_thirds
+            a = (self.i - self.pub_max_iterations_two_thirds) / max(1, phase_len)
             positions = [
-                a * math.pi * 0.5,
-                -0.3 - a * -0.3,
-                a * math.pi * 0.5
+                a * (0.5 * math.pi),                    # J1: 0 -> pi/2
+                0.0,                                    # J2: hold at 0
+                -1.0 * math.pi                          # J3: hold at -pi
             ]
 
         else:
             positions = [0.0, 0.0, 0.0]
 
+        
 
         if self.i <= self.pub_max_iterations:
             # Create a fresh point

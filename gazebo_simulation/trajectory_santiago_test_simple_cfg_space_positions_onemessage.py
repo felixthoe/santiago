@@ -30,17 +30,17 @@ class TrajectoryPublisherSantiago(Node):
         if i < self.n1:
             a = i / self.n1 if self.n1 > 0 else 0.0
             return [
-                a * math.pi * 0.5,
-                -0.5 + a * -0.4,  # goes from -0.5 to -0.9
-                a * math.pi,
+                0.5 * math.pi + a * (-1.0 * math.pi),  
+                0.0 + a * (-0.01),                      
+                0.0 + a * (-0.5 * math.pi)             
             ]
-
+        """
         if i < self.n2:
             denom = (self.n2 - self.n1) if (self.n2 - self.n1) > 0 else 1.0
             a = (i - self.n1) / denom
             return [
                 math.pi * 0.5 * (1 - a),
-                -0.9 - a * -0.4,  # goes from -0.9 back to -0.5
+                -0.9 - a * -0.4,  
                 math.pi * (1 - a),
             ]
 
@@ -49,12 +49,12 @@ class TrajectoryPublisherSantiago(Node):
             a = (i - self.n2) / denom
             return [
                 a * math.pi * 0.5,
-                -0.5 - a * 0.4,   # goes from -0.5 to -0.9
+                -0.5 - a * 0.4,   
                 a * math.pi,
             ]
 
         return [0.0, 0.0, 0.0]
-
+        """
     def publish_once(self):
         if self._published:
             return
