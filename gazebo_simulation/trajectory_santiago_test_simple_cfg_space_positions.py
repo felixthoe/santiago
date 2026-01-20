@@ -37,9 +37,9 @@ class TrajectoryPublisherSantiago(Node):
         if self.i < self.pub_max_iterations_one_third:
             a = self.i / self.pub_max_iterations_one_third
             positions = [
-                a * math.pi * 0.5,
-                0 + a * -0.1,
-                a * math.pi * 0.5
+                a * math.pi * 0.0,
+                0 + a * -0.25,
+                a * math.pi * -0.5
             ]
 
         elif self.i < self.pub_max_iterations_two_thirds:
