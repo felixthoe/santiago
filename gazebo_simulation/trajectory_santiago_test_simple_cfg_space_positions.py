@@ -38,8 +38,8 @@ class TrajectoryPublisherSantiago(Node):
             a = self.i / self.pub_max_iterations_one_third
             positions = [
                 a * math.pi * 0.5,
-                -0.5 + a * -0.4,
-                a * math.pi
+                0 + a * -0.1,
+                a * math.pi * 0.5
             ]
 
         elif self.i < self.pub_max_iterations_two_thirds:
@@ -48,8 +48,8 @@ class TrajectoryPublisherSantiago(Node):
             )
             positions = [
                 math.pi * 0.5 * (1 - a),
-                -0.9 - a * -0.4,
-                math.pi * (1 - a)
+                -0.1 - a * 0.2,
+                math.pi * 0.5 * (1 - a)
             ]
 
         elif self.i <= self.pub_max_iterations:
@@ -58,8 +58,8 @@ class TrajectoryPublisherSantiago(Node):
             )
             positions = [
                 a * math.pi * 0.5,
-                -0.5 - a * 0.4,
-                a * math.pi
+                -0.3 - a * -0.3,
+                a * math.pi * 0.5
             ]
 
         else:
@@ -84,7 +84,7 @@ class TrajectoryPublisherSantiago(Node):
 def main(args=None):
     print("TrajectoryPublisher node started")
     rclpy.init(args=args)
-    node = TrajectoryPublisherSantiago("santiago_trajectory_publisher", 1, 10)
+    node = TrajectoryPublisherSantiago("santiago_trajectory_publisher", 0.01, 2000)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
