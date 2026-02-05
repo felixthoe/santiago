@@ -38,6 +38,7 @@ class ApplyWrenchNode(Node):
                 self.get_logger().error('Service call to gazebos /apply_link_wrench failed: Response was unsuccessful')
             else:
                 self.get_logger().info(f'Wrench applied succesfully')
+              # self.get_logger().info(f'Wrench forces: x:{request.wrench.force.x}, y:{request.wrench.force.y}, z: {request.wrench.force.z}')
         except Exception as e:
             self.get_logger().error(f'Service call to gazebos /apply_link_wrench faied: {e}')
 

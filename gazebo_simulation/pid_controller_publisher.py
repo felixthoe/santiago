@@ -7,7 +7,7 @@ from std_msgs.msg import Float64
 class PIDControllerPublisher(Node):
 
     def __init__(self):
-        super().__init__('pid_controller_publisher')
+        super().__init__('pid_controller_publisher') # Node name
 
         # Create publishers for each joint controller
         self.publisher = self.create_publisher(MultiDOFCommand, '/pid_controller/reference', 10)
@@ -26,6 +26,7 @@ class PIDControllerPublisher(Node):
         msg.dof_names = ['base_rotation_joint', 'arm_height_joint', 'arm_rotation_joint']
 
         # just some test signals
+        # determining the direction of the movement
         if self.reverse==False:
             self.i += 0.01
             if self.i==1 or self.i>1:
@@ -34,6 +35,7 @@ class PIDControllerPublisher(Node):
             self.i -= 0.01
             if self.i==0 or self.i<0:
                 self.reverse=False
+        
         self.base_rotation_reference = (self.i*1.5-1)*np.pi     # between -pi and pi/2 radians
         self.arm_height_reference = -self.i*0.6                 # between -0.6 and 0 meters
         self.arm_rotation_reference = -self.i*np.pi/2           # between -pi/2 and 0 radians

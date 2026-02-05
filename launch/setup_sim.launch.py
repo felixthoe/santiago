@@ -57,6 +57,8 @@ def generate_launch_description():
         output='screen'
     )
 
+    #Insert trajectory_publisher node or pid_controller_publisher node here depending on launch argument. so it doesnt have to be started seperately
+
     # Run the node
     return LaunchDescription([
         declare_controller_arg,

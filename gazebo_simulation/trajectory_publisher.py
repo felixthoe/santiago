@@ -6,7 +6,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 class TrajectoryPublisher(Node):
 
     def __init__(self):
-        super().__init__('trajectory_publisher')
+        super().__init__('trajectory_publisher') # Node Name
         self.publisher_ = self.create_publisher(JointTrajectory, '/joint_trajectory_controller/joint_trajectory', 10)
         self.timer_period = 10  # seconds
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
