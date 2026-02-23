@@ -11,6 +11,10 @@
 
   <material name="white">
     <color rgba="1 1 1 1"/>
+  </material>  
+  
+  <material name="brown">
+    <color rgba="0.163 0.155 0.120 1"/>
   </material>
 
   <material name="oak">
@@ -55,9 +59,243 @@
     </plugin>
   </gazebo>
 
-  <link name="map" />
+  <!-- The Robot Description starts here:-->
 
-  <!--link name="bed_and_base">
+  <link name="robot_base" />
+
+  <joint name = "map_frame_joint" type = "fixed">
+    <origin xyz="0.35575 -0.180 0"/>
+    <parent link = "robot_base" />
+    <child link = "frame_link" />
+  </joint> 
+
+  <!--Base frame-->
+  <link name="frame_link">
+    <visual>
+      <origin xyz="0 0 0.040" />
+      <geometry>
+        <box size="1.395 0.645 0.080"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.040" />
+      <geometry>
+        <box size="1.395 0.645 0.080"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="100.0"/>
+      <origin xyz="-0.6 0.175 -0.056329" />
+      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+  
+  <joint name = "frame_lower_motor_box_joint" type = "fixed">
+    <origin xyz="-0.35575 0.180 0.080"/>
+    <parent link = "frame_link" />
+    <child link = "lower_motor_box_link" />
+  </joint> 
+
+  <!--lower motor box-->
+  <link name="lower_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.110" />
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <joint name = "lower_motor_box_column_outside_joint" type = "fixed">
+    <origin xyz="0 0 0.220"/>
+    <parent link = "lower_motor_box_link" />
+    <child link = "column_outside_link" />
+  </joint> 
+
+    <!--lifting_column_outside-->
+  <link name="column_outside_link">
+    <visual>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0.065 0 0.320"/>
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <joint name = "column_outside_column_inside_joint" type = "prismatic">
+    <origin xyz="0 0 0.005"/>
+    <parent link = "column_outside_link" />
+    <child link = "column_inside_link" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0" friction="0"/>
+    <limit lower="0.005" upper="0.165" velocity="0.5" effort="5000"/> <!--Joint limits need to be specified-->
+  </joint> 
+
+  <!--lifting_column_inside-->
+  <link name="column_inside_link">
+    <visual>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.320"/>
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <joint name = "column_inside_joint" type = "fixed">
+    <origin xyz="0 0 0.650"/>
+    <parent link = "column_inside_link" />
+    <child link = "middle_motor_box_link" />
+  </joint> 
+
+  <!--middle motor box-->
+  <link name="middle_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.085"/>
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <joint name = "middle_box_upper_cylinder_joint" type = "fixed">
+    <origin xyz="0 0 0.170"/>
+    <parent link = "middle_motor_box_link" />
+    <child link = "upper_cylinder_link" />
+  </joint> 
+
+  <!--cylinder connecting the upper boxes-->
+  <link name="upper_cylinder_link">
+    <visual>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0.020"/>
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <joint name = "upper_cylinder_upper_motor_joint" type = "revolute">
+    <origin xyz="0 0 0.020"/>
+    <parent link = "upper_cylinder_link" />
+    <child link = "upper_motor_box_link" />
+    <dynamics damping="0" friction="0"/>
+    <axis xyz="0 0 1" />
+    <limit effort="5000" lower="-3.141" upper="1.5708" velocity="0.5"/>  <!--Joint limits need to be specified-->
+  </joint> 
+
+  <!--upper motor box-->
+  <link name="upper_motor_box_link">
+    <visual>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0.11575 0 0.08475"/>
+      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+  </inertial>
+  </link>
+
+  <!--older tries
+
+  <joint name = "map_Bed_joint" type = "prismatic">
+    <origin xyz="0 0 0"/>
+    <parent link = "map" />
+    <child link = "Bed" />
+    <axis xyz="0 0 1" />
+    <limit lower="-0.6" upper="0" velocity="0.5" effort="5000"/>
+  </joint> 
+
+  <link name="Bed">
+    <visual>
+      <origin xyz="2 2 -0.056329" rpy="1.5708 0 0"/>
+      <geometry>
+        <mesh filename="package://gazebo_simulation/meshes/visual/Bed_simple.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="oak"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="4.184 0.033 0.386658"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="100.0"/>
+      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <link name="bed_and_base">
     <visual>
       <origin xyz="-0.6 0.175 -0.056329" />
       <geometry>
@@ -66,9 +304,9 @@
       <material name="oak"/>
     </visual>
     <collision>
-      <origin xyz="-0.6 0.175 -0.056329" />
+      <origin xyz="0 0 0"/>
       <geometry>
-        <box size="0.9 2.184 0.386658"/>      
+        <box size="2.184 1.033 0.386658"/>      
       </geometry>
     </collision>
     <visual>
@@ -89,91 +327,15 @@
       <origin xyz="-0.6 0.175 -0.056329" />
       <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
     </inertial>
-  </link-->
+  </link>
 
-  <joint name = "map_robot_joint" type = "fixed">
-    <parent link = "map" />
-    <child link = "robot_base_link" />
+  <joint name = "Bed_robot_joint" type = "fixed">
     <origin xyz="0 0 0"/>
+    <parent link = "Bed" />
+    <child link = "bed_and_base" />
   </joint> 
-
-  <link name = "robot_base_link">
-    <visual>
-      <origin xyz="0 0 0.04"/>
-      <geometry>
-        <box size= "0.395 0.555 0.08" />
-      </geometry>
-      <material name="white"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0.04"/>
-      <geometry>
-        <box size= "0.395 0.555 0.08" />
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value = "10" />
-      <origin xyz="0 0 0.04"/>
-      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
-    </inertial>
-  </link >
-
-  <joint name = "robot_base_base_cube_joint" type = "fixed">
-    <parent link = "robot_base_link" />
-    <child link = "base_cube_link" />
-    <origin xyz="0 0 0.08"/>
-  </joint> 
-
-  <link name = "base_cube_link">
-    <visual>
-      <origin xyz="0 0 0.105"/>
-      <geometry>
-        <box size= "0.218 0.2165 0.210" />
-      </geometry>
-      <material name="white"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0.105"/>
-      <geometry>
-        <box size= "0.218 0.2165 0.210" />
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value = "10" />
-      <origin xyz="0 0 0.105"/>
-      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
-    </inertial>
-  </link >
   
-  <joint name = "base_cube_cylinder_joint" type = "fixed">
-    <parent link = "base_cube_link" />
-    <child link = "telescope_outside_link" />
-    <origin xyz="0 0 0.08"/>
-  </joint> 
-
-  <!--link name = "telescope_outside_link">
-    <visual>
-      <origin xyz="0 0 0.105"/>
-      <geometry>
-        <box size= "0.218 0.2165 0.210" />
-      </geometry>
-      <material name="white"/>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0.105"/>
-      <geometry>
-        <box size= "0.218 0.2165 0.210" />
-      </geometry>
-    </collision>
-    <inertial>
-      <mass value = "10" />
-      <origin xyz="0 0 0.105"/>
-      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
-    </inertial>
-  </link -->
-
-
-  <!--link name="base_cylinder">
+  <link name="base_cylinder">
     <visual>
       <geometry>
         <cylinder length="0.88" radius="0.05"/>
@@ -194,7 +356,7 @@
   </link>
 
   <joint name="base_rotation_joint" type="revolute">
-    <parent link="robot_base_link"/>
+    <parent link="bed_and_base"/>
     <child link="base_cylinder"/>
     <origin xyz="0 0 0.01"/>
     <axis xyz="0 0 1" />
@@ -316,9 +478,10 @@
     <parent link="arm_third_link"/>
     <child link="end_effector"/>
     <origin xyz="0 0 0.438796" rpy="0 -1.5708 0"/>
-  </joint-->
+  </joint>
+
+  -->
 
 </robot>
-
 
 

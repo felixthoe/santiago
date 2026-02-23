@@ -16,6 +16,8 @@ setup(
         (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*.yaml*'))),
         (os.path.join('share', package_name, 'urdf'), glob(os.path.join('urdf', '*.urdf*'))),
         (os.path.join('share', package_name, 'sdf'), glob(os.path.join('sdf', '*.sdf*'))),
+        (os.path.join('share', package_name, 'meshes/visual'), glob(os.path.join('meshes/visual', '*.*'))),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,

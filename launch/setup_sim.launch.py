@@ -57,7 +57,12 @@ def generate_launch_description():
         output='screen'
     )
 
-    #Insert trajectory_publisher node or pid_controller_publisher node here depending on launch argument. so it doesnt have to be started seperately
+    start_rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen'
+    )
 
     # Run the node
     return LaunchDescription([
@@ -70,5 +75,6 @@ def generate_launch_description():
         ),
         gazebo,
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        start_rviz
     ]) 
