@@ -21,30 +21,31 @@
     <color rgba="0.84375 0.70703125 0.53515625 1"/>
   </material>
 
+  <!--define initial values-->
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
-    <joint name="base_rotation_joint">
+    <joint name="upper_cylinder_upper_motor_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">3.141</param>
+        <param name="initial_value">0.7</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="arm_height_joint">
+    <joint name="column_outside_column_inside_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">0.0</param>
+        <param name="initial_value">0.1</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="arm_rotation_joint">
+    <joint name="upper_motor_box_arm_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">0.0</param>
+        <param name="initial_value">0.7</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
@@ -253,7 +254,7 @@
       <material name="brown"/>
     </visual>
     <collision>
-      <origin xyz="0.11575 0 0.08475"/>
+      <origin xyz="-0.11575 0 0.08475"/>
       <geometry>
         <box size="0.4215 0.223 0.1695"/>      
       </geometry>
@@ -262,8 +263,91 @@
       <mass value="10.0"/>
       <origin xyz="0.11575 0 0.08475"/>
       <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+    </inertial>
   </link>
+
+  <joint name="upper_motor_box_arm_joint" type="revolute">
+    <parent link="upper_motor_box_link"/>
+    <child link="arm_first_link"/>
+    <origin xyz="0.095 0 0.08475" rpy="0 -1.57079 3.1415926"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit lower="-1.5708" upper="0" velocity="0.5" effort="5000"/>   <!--Joint limits need to be specified-->
+  </joint>
+
+  <!--first arm link-->
+  <link name="arm_first_link">
+    <visual>
+      <origin xyz="0 0 0.080602" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.125742" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.080602" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.125742" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.0011" ixy="0.0" ixz="0.0" iyy="0.0011" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_first_joint" type="fixed">
+    <parent link="arm_first_link"/>
+    <child link="arm_second_link"/>
+    <origin xyz="0 0 0.161204" rpy="0 -1.5708 0"/>
+  </joint>
+
+  <link name="arm_second_link">
+    <visual>
+      <origin xyz="0.02 0 0.15" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.300" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0.02 0 0.15" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.300" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.1"/>
+      <inertia ixx="11e-3" ixy="0.0" ixz="0.0" iyy="11e-3" iyz="0.0" izz="2.2e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_second_joint" type="fixed">
+    <parent link="arm_second_link"/>
+    <child link="arm_third_link"/>
+    <origin xyz="0.04 0 0.3" rpy="0 1.5708 0"/>
+  </joint>
+
+  <link name="arm_third_link">
+    <visual>
+      <origin xyz="0 0 0.378994"/>
+      <geometry>
+        <cylinder length="0.810" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.378994"/>
+      <geometry>
+        <cylinder length="0.810" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.4"/>
+      <inertia ixx="0.115" ixy="0.0" ixz="0.0" iyy="0.115" iyz="0.0" izz="4.8e-4"/>
+    </inertial>
+  </link>
+
+
 
   <!--older tries
 

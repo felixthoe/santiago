@@ -57,12 +57,12 @@ def generate_launch_description():
         output='screen'
     )
 
-    start_rviz = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        output='screen'
-    )
+    # start_rviz = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     name='rviz2',
+    #     output='screen'
+    # )
 
     # Run the node
     return LaunchDescription([
@@ -76,5 +76,5 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        start_rviz
+     #   start_rviz
     ]) 
