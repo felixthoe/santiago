@@ -88,7 +88,7 @@
     <inertial>
       <mass value="100.0"/>
       <origin xyz="0 0 0.040" />
-      <inertia ixx="10.0" iyy="10.0" izz="10.0" ixy="0.0" ixz="0.0" iyz="0.0"/>
+      <inertia ixx="3.524" iyy="16.264" izz="19.789" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
   
@@ -116,8 +116,8 @@
     <inertial>
       <mass value="19.5"/>
       <origin xyz="0 0 0.110" />
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+      <inertia ixx="0.196" iyy="0.194" izz="0.193" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name = "lower_motor_box_column_outside_joint" type = "fixed">
@@ -144,8 +144,8 @@
     <inertial>
       <mass value="9.0"/>
       <origin xyz="0.065 0 0.320"/>
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+      <inertia ixx="0.313" iyy="0.307" izz="0.031" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name = "arm_height_joint" type = "prismatic">
@@ -175,8 +175,8 @@
     <inertial>
       <mass value="9.0"/>
       <origin xyz="0 0 0.320"/>
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name = "column_inside_joint" type = "fixed">
@@ -203,8 +203,8 @@
     <inertial>
       <mass value="19.0"/>
       <origin xyz="0 0 0.085"/>
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+      <inertia ixx="0.092" iyy="0.092" izz="0.150" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name = "middle_box_upper_cylinder_joint" type = "fixed">
@@ -231,12 +231,12 @@
     <inertial>
       <mass value="1.0"/>
       <origin xyz="0 0 0.020"/>
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
-  </inertial>
+      <inertia ixx="0.007" iyy="0.007" izz="0.006" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name = "base_rotation_joint" type = "revolute">
-    <origin xyz="0 0 0.020"/>
+    <origin xyz="0 0 0.040"/>
     <parent link = "upper_cylinder_link" />
     <child link = "upper_motor_box_link" />
     <dynamics damping="0" friction="0"/>
@@ -262,7 +262,7 @@
     <inertial>
       <mass value="22.0"/>
       <origin xyz="-0.11575 0 0.08475"/>
-      <inertia ixx="0.10" iyy="0.10" izz="0.10" ixy="0.0" ixz="0.0" iyz="0.0"/>
+      <inertia ixx="0.161" iyy="0.677" izz="0.784" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -277,73 +277,76 @@
   <!--first arm link-->
   <link name="arm_first_link">
     <visual>
-      <origin xyz="0 0 0.080602" rpy="0 0 0" />
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.125742" radius="0.015"/>
+        <cylinder length="0.148" radius="0.015"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0.080602" rpy="0 0 0" />
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
       <geometry>
-        <cylinder length="0.125742" radius="0.015"/>
+        <cylinder length="0.148" radius="0.015"/>
       </geometry>
     </collision>
     <inertial>
       <mass value="1.5"/>
-      <inertia ixx="0.0011" ixy="0.0" ixz="0.0" iyy="0.0011" iyz="0.0" izz="0.001"/>
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
+      <inertia ixx="0.003" iyy="0.003" izz="0.000" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
   <joint name="arm_first_joint" type="fixed">
     <parent link="arm_first_link"/>
     <child link="arm_second_link"/>
-    <origin xyz="0 0 0.161204" rpy="0 -1.5708 0"/>
+    <origin xyz="0 0 0.148" rpy="0 -1.5708 0"/>
   </joint>
 
   <link name="arm_second_link">
     <visual>
-      <origin xyz="0.02 0 0.15" rpy="0 0 0"/>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.300" radius="0.015"/>
+        <cylinder length="0.306" radius="0.015"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
-      <origin xyz="0.02 0 0.15" rpy="0 0 0"/>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.300" radius="0.015"/>
+        <cylinder length="0.306" radius="0.015"/>
       </geometry>
     </collision>
     <inertial>
       <mass value="0.5"/>
-      <inertia ixx="11e-3" ixy="0.0" ixz="0.0" iyy="11e-3" iyz="0.0" izz="2.2e-4"/>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
+      <inertia ixx="0.004" iyy="0.004" izz="0.000" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
   <joint name="arm_second_joint" type="fixed">
     <parent link="arm_second_link"/>
     <child link="arm_third_link"/>
-    <origin xyz="0.04 0 0.3" rpy="0 1.5708 0"/>
+    <origin xyz="0 0 0.314" rpy="0 1.5708 0"/>
   </joint>
 
   <link name="arm_third_link">
     <visual>
-      <origin xyz="0 0 0.378994"/>
+      <origin xyz="0 0 0.419"/>
       <geometry>
-        <cylinder length="0.810" radius="0.015"/>
+        <cylinder length="0.838" radius="0.015"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0.378994"/>
+      <origin xyz="0 0 0.419"/>
       <geometry>
-        <cylinder length="0.810" radius="0.015"/>
+        <cylinder length="0.838" radius="0.015"/>
       </geometry>
     </collision>
     <inertial>
       <mass value="2.5"/>
-      <inertia ixx="0.115" ixy="0.0" ixz="0.0" iyy="0.115" iyz="0.0" izz="4.8e-4"/>
+      <origin xyz="0 0 0.419"/>
+      <inertia ixx="0.146" iyy="0.146" izz="0.000" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -354,6 +357,50 @@
   </joint>
 
   <link name="end_effector" />
+
+  <!-- Gazebo material references -->
+  <!-- Grey links (frame, lower motor boxes) -->
+  <gazebo reference="frame_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="lower_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="middle_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="upper_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- White links (columns, cylinder) -->
+  <gazebo reference="column_outside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="column_inside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="upper_cylinder_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Blue links (arm segments) -->
+  <gazebo reference="arm_first_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="arm_second_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="arm_third_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
 
   <!--older tries
 
