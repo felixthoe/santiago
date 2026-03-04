@@ -26,26 +26,26 @@
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
-    <joint name="base_rotation_joint">
+    <joint name="upper_cylinder_upper_motor_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">0.7</param>
+        <param name="initial_value">0</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="arm_height_joint">
+    <joint name="column_outside_column_inside_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">0.3</param>
+        <param name="initial_value">0.0</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
     </joint>
-    <joint name="arm_rotation_joint">
+    <joint name="upper_motor_box_arm_joint">
       <command_interface name="effort"/>
       <state_interface name="position">
-        <param name="initial_value">-0.7</param>
+        <param name="initial_value">0</param>
       </state_interface>
       <state_interface name="velocity"/>
       <state_interface name="effort"/>
@@ -148,13 +148,13 @@
     </inertial>
   </link>
 
-  <joint name = "arm_height_joint" type = "prismatic">
+  <joint name = "column_outside_column_inside_joint" type = "prismatic">
     <origin xyz="0 0 0.005"/>
     <parent link = "column_outside_link" />
     <child link = "column_inside_link" />
     <axis xyz="0 0 1" />
-    <dynamics damping="0" friction="0"/>
-    <limit lower="0.005" upper="0.165" velocity="0.5" effort="5000"/> <!--Joint limits need to be specified-->
+    <dynamics damping="0.5" friction="1.1"/>
+    <limit lower="0" upper="50.0" velocity="100" effort="5000"/> <!--only a lower limit and a realistically unachievable upper limit-->
   </joint> 
 
   <!--lifting_column_inside-->
@@ -235,13 +235,13 @@
     </inertial>
   </link>
 
-  <joint name = "base_rotation_joint" type = "revolute">
+  <joint name = "upper_cylinder_upper_motor_joint" type = "continuous"> <!--coninuous = revolute with no limits -->
     <origin xyz="0 0 0.040"/>
     <parent link = "upper_cylinder_link" />
     <child link = "upper_motor_box_link" />
-    <dynamics damping="0" friction="0"/>
+    <dynamics damping="0.5" friction="0.1"/>
     <axis xyz="0 0 1" />
-    <limit effort="5000" lower="-3.141" upper="1.5708" velocity="0.5"/>  <!--Joint limits need to be specified-->
+    <!-- <limit lower="-3.141" upper="1.5708" velocity="1000" effort="500000"/> -->
   </joint> 
 
   <!--upper motor box-->
@@ -266,12 +266,13 @@
     </inertial>
   </link>
 
-  <joint name="arm_rotation_joint" type="revolute">
+  <joint name="upper_motor_box_arm_joint" type="continuous"> <!--coninuous = revolute with no limits -->
     <parent link="upper_motor_box_link"/>
     <child link="arm_first_link"/>
     <origin xyz="0.095 0 0.08475" rpy="0 -1.57079 3.1415926"/>
+    <dynamics damping="0.5" friction="0.1"/>
     <axis xyz="0 0 1" rpy="0 0 0"/>
-    <limit lower="-1.5708" upper="0" velocity="0.5" effort="5000"/>   <!--Joint limits need to be specified-->
+    <!-- <limit lower="-1.5708" upper="0" velocity="1000" effort="5000"/>-->
   </joint>
 
   <!--first arm link-->
@@ -292,7 +293,7 @@
     <inertial>
       <mass value="1.5"/>
       <origin xyz="0 0 0.074" rpy="0 0 0" />
-      <inertia ixx="0.003" iyy="0.003" izz="0.000" ixy="0" ixz="0" iyz="0"/>
+      <inertia ixx="0.003" iyy="0.003" izz="0.0001688" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -319,7 +320,7 @@
     <inertial>
       <mass value="0.5"/>
       <origin xyz="0 0 0.153" rpy="0 0 0"/>
-      <inertia ixx="0.004" iyy="0.004" izz="0.000" ixy="0" ixz="0" iyz="0"/>
+      <inertia ixx="0.004" iyy="0.004" izz="0.0000563" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -346,14 +347,14 @@
     <inertial>
       <mass value="2.5"/>
       <origin xyz="0 0 0.419"/>
-      <inertia ixx="0.146" iyy="0.146" izz="0.000" ixy="0" ixz="0" iyz="0"/>
+      <inertia ixx="0.146" iyy="0.146" izz="0.0002813" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
   <joint name="end_effector_joint" type="fixed">
     <parent link="arm_third_link"/>
     <child link="end_effector"/>
-    <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+    <origin xyz="0 0 0.2" rpy="0 -1.5708 0"/>
   </joint>
 
   <link name="end_effector" />

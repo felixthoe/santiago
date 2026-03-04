@@ -13,7 +13,7 @@ class TrajectoryPublisher(Node):
 
     def timer_callback(self):
         msg = JointTrajectory()
-        msg.joint_names = ['base_rotation_joint', 'arm_height_joint', 'arm_rotation_joint']
+        msg.joint_names = ['upper_cylinder_upper_motor_joint', 'column_outside_column_inside_joint', 'upper_motor_box_arm_joint']
         
         for i in range(self.timer_period+1):
             point = JointTrajectoryPoint()

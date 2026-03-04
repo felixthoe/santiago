@@ -23,7 +23,7 @@ class PIDControllerPublisher(Node):
     def timer_callback(self):
         # Create message
         msg = MultiDOFCommand()
-        msg.dof_names = ['base_rotation_joint', 'arm_height_joint', 'arm_rotation_joint']
+        msg.dof_names = ['upper_cylinder_upper_motor_joint', 'column_outside_column_inside_joint', 'upper_motor_box_arm_joint']
 
         # just some test signals
         # determining the direction of the movement
@@ -46,7 +46,7 @@ class PIDControllerPublisher(Node):
         # Publish messages
         self.publisher.publish(msg)
 
-        self.get_logger().info(f'Publishing: base_rotation={self.base_rotation_reference}, arm_height={self.arm_height_reference}, arm_rotation={self.arm_rotation_reference}')
+        self.get_logger().info(f'Publishing: upper_cylinder_upper_motor_joint={self.base_rotation_reference}, column_outside_column_inside_joint={self.arm_height_reference}, upper_motor_box_arm_joint={self.arm_rotation_reference}')
 
 def main(args=None):
     rclpy.init(args=args)
