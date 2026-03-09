@@ -29,20 +29,20 @@ class PIDControllerPublisher(Node):
         # determining the direction of the movement
         if self.reverse==False:
             self.i += 0.01
-            if self.i==1 or self.i>1:
+            if self.i >= 1.0:
                 self.reverse=True
         else:
             self.i -= 0.01
-            if self.i==0 or self.i<0:
+            if self.i <= 0.0:
                 self.reverse=False
         
         self.base_rotation_reference = (self.i*1.5-1)*np.pi     # between -pi and pi/2 radians
-        self.arm_height_reference = -self.i*0.6                 # between -0.6 and 0 meters
+        self.arm_height_reference = self.i*0.16                 # between 0 and 0.16 meters
         self.arm_rotation_reference = -self.i*np.pi/2           # between -pi/2 and 0 radians
 
         # Fill in the message
         msg.values = [self.base_rotation_reference, self.arm_height_reference, self.arm_rotation_reference]
-
+        msg.values_dot = [0.0, 0.0, 0.0]  # No velocity command
         # Publish messages
         self.publisher.publish(msg)
 

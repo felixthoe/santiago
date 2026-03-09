@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler, TimerAction
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -47,34 +47,45 @@ def generate_launch_description():
     )
 
     # spawn our assist_robot
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
         arguments=['-topic', 'robot_description', '-entity', 'robot'],
         output='screen'
     )
+    
+    # load joint_state_broadcaster first after spawn of entity
+    load_joint_state_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', 'joint_state_broadcaster'],
+        output='screen'
+    )
 
+    # load the specified controller after joint_state_broadcaster is running
     load_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', '--set-state', 'active', controller],
         output='screen'
     )
 
-    # start_rviz = Node(
-    #     package='rviz2',
-    #     executable='rviz2',
-    #     name='rviz2',
-    #     output='screen'
-    # )
-
     # Run the node
     return LaunchDescription([
         declare_controller_arg,
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_entity,
-                on_exit=[load_controller],
-            )
-        ),
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-     #   start_rviz
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=spawn_entity,
+                on_exit=[load_joint_state_broadcaster],
+            )
+        ),
+
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_broadcaster,
+                on_exit=[TimerAction(
+                    period=2.0,  # wait for 2 seconds to ensure the joint_state_broadcaster is fully active
+                    actions=[load_controller]
+                )],
+            )
+        ),
     ]) 

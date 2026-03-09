@@ -114,7 +114,7 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="19.5"/>
+      <mass value="28.0"/>
       <origin xyz="0 0 0.110" />
       <inertia ixx="0.196" iyy="0.194" izz="0.193" ixy="0" ixz="0" iyz="0"/>
     </inertial>
@@ -142,8 +142,36 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="9.0"/>
+      <mass value="0.5"/>
       <origin xyz="0.065 0 0.320"/>
+      <inertia ixx="0.313" iyy="0.307" izz="0.031" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "column_outside_Bedcenter_joint" type = "fixed">
+    <origin xyz="0.774 0 0.120"/>
+    <parent link = "column_outside_link" />
+    <child link = "Bed_center_link" />
+  </joint> 
+
+    <!--Bedcenter-->
+  <link name="Bed_center_link">
+    <visual>
+      <origin xyz="0.0 0 0.085"/>
+      <geometry>
+        <box size="0.900 2.004 0.170"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0 0.085"/>
+      <geometry>
+        <box size="0.900 2.004 0.170"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0.0 0 0.085"/>
       <inertia ixx="0.313" iyy="0.307" izz="0.031" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
@@ -350,11 +378,68 @@
       <inertia ixx="0.146" iyy="0.146" izz="0.0002813" ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
+  
+  <joint name="robot_Body_joint" type="continuous">
+    <parent link="arm_third_link"/>
+    <child link="BodyArms_link"/>
+    <origin xyz="0.015 0 0.419" rpy="0 1.5708 0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <!--BodyArms-->
+  <link name="BodyArms_link">
+    <visual>
+      <origin xyz="0 0.100 0.005"/>
+      <geometry>
+        <box size="0.400 0.200 0.040"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0.100 0.005"/>
+      <geometry>
+        <box size="0.400 0.200 0.040"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="9.0"/>
+      <origin xyz="0 0.100 0.005"/>
+      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "BodyArms_UpperBody_joint" type = "fixed">
+    <origin xyz="0 0.200 -0.100"/>
+    <parent link = "BodyArms_link" />
+    <child link = "UpperBody_link" />
+  </joint> 
+
+  <link name="UpperBody_link">
+    <visual>
+      <origin xyz="0 0 0.20"/>
+      <geometry>
+        <box size="0.400 0.100 0.550"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.20"/>
+      <geometry>
+        <box size="0.400 0.100 0.550"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="9.0"/>
+      <origin xyz="0 0 0.20"/>
+      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
 
   <joint name="end_effector_joint" type="fixed">
     <parent link="arm_third_link"/>
     <child link="end_effector"/>
-    <origin xyz="0 0 0.2" rpy="0 -1.5708 0"/>
+    <origin xyz="0 0 0.838" rpy="0 -1.5708 0"/>
   </joint>
 
   <link name="end_effector" />
@@ -379,6 +464,18 @@
 
   <!-- White links (columns, cylinder) -->
   <gazebo reference="column_outside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="BodyArms_link">
+  <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="UpperBody_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="Bed_center_link">
     <material>Gazebo/White</material>
   </gazebo>
 
