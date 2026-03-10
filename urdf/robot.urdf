@@ -436,6 +436,36 @@
     </inertial>
   </link>
 
+  <joint name="Upper_Lower_Body_joint" type="revolute">
+    <parent link="UpperBody_link"/>
+    <child link="LowerBody_link"/>
+    <origin xyz="0 0 0.500" rpy="0 0 0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0" velocity="1000" effort="500000"/> 
+  </joint>
+
+  <link name="LowerBody_link">
+    <visual>
+      <origin xyz="0 0 0.275"/>
+      <geometry>
+        <box size="0.300 0.080 0.550"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.275"/>
+      <geometry>
+        <box size="0.300 0.080 0.550"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="9.0"/>
+      <origin xyz="0 0 0.275"/>
+      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
   <joint name="end_effector_joint" type="fixed">
     <parent link="arm_third_link"/>
     <child link="end_effector"/>
