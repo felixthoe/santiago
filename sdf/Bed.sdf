@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+    <model name = "Bed">
+        <static>true</static>
+        <link name="Bed">
+            <pose> 0 0 0 0 0 0</pose>
+            <collision name="collision">
+                <geometry>
+                    <box>
+                        <size>0.900 2.004 0.170</size>  <!-- length width height in meters -->
+                    </box>
+                </geometry>
+            </collision>
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>0.900 2.004 0.170</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.5 0.3 0.1 1</ambient>
+                    <diffuse>0.5 0.3 0.1 1</diffuse>
+                </material>
+            </visual>
+        </link>
+    </model>
+</sdf>

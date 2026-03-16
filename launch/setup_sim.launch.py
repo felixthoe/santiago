@@ -37,6 +37,18 @@ def generate_launch_description():
         ]),
     )
 
+    #spawn the bed in gazebo to test the collision of the robot with the bed
+    spawn_bed = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=[
+            '-file', os.path.join(get_package_share_directory(pkg_name),'sdf', 'Bed.sdf'),
+            '-entity', 'bed',
+            '-x', '0.774', '-y', '0', '-z', '0.285',
+            ],
+        output='screen'
+    )
+
     # Configure the node robot_state_publisher
     node_robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -78,7 +90,7 @@ def generate_launch_description():
                 on_exit=[load_joint_state_broadcaster],
             )
         ),
-
+        spawn_bed,
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=load_joint_state_broadcaster,
