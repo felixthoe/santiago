@@ -42,8 +42,7 @@ pid_controller:
       - upper_cylinder_upper_motor_joint
       - column_outside_column_inside_joint
       - upper_motor_box_arm_joint
-    command_interfaces: 
-      - effort
+    command_interface: "effort"
     reference_and_state_interfaces:
       - position
       - velocity
