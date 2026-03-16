@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="robot">
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
   
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
@@ -70,7 +70,7 @@
     <child link = "frame_link" />
   </joint> 
 
-  <!--Base frame-->
+  <!-- Base frame -->
   <link name="frame_link">
     <visual>
       <origin xyz="0 0 0.040" />
@@ -86,9 +86,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="100.0"/>
+      <xacro:property name="frame_link_mass" value="100.0"/>
+      <mass value="${frame_link_mass}"/>
       <origin xyz="0 0 0.040" />
-      <inertia ixx="3.524" iyy="16.264" izz="19.789" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${frame_link_mass / 12.0 * (0.645*0.645 + 0.080*0.080)}"
+        iyy="${frame_link_mass / 12.0 * (1.395*1.395 + 0.080*0.080)}"
+        izz="${frame_link_mass / 12.0 * (1.395*1.395 + 0.645*0.645)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
   
@@ -98,7 +103,7 @@
     <child link = "lower_motor_box_link" />
   </joint> 
 
-  <!--lower motor box-->
+  <!-- lower motor box -->
   <link name="lower_motor_box_link">
     <visual>
       <origin xyz="0 0 0.110"/>
@@ -114,9 +119,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="28.0"/>
+      <xacro:property name="lower_motor_box_mass" value="28.0"/>
+      <mass value="${lower_motor_box_mass}"/>
       <origin xyz="0 0 0.110" />
-      <inertia ixx="0.196" iyy="0.194" izz="0.193" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${lower_motor_box_mass / 12.0 * (0.218*0.218 + 0.220*0.220)}"
+        iyy="${lower_motor_box_mass / 12.0 * (0.2165*0.2165 + 0.220*0.220)}"
+        izz="${lower_motor_box_mass / 12.0 * (0.2165*0.2165 + 0.218*0.218)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -126,7 +136,7 @@
     <child link = "column_outside_link" />
   </joint> 
 
-    <!--lifting_column_outside-->
+  <!-- lifting_column_outside -->
   <link name="column_outside_link">
     <visual>
       <origin xyz="0.065 0 0.320"/>
@@ -142,9 +152,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.5"/>
+      <xacro:property name="column_outside_mass" value="0.5"/>
+      <mass value="${column_outside_mass}"/>
       <origin xyz="0.065 0 0.320"/>
-      <inertia ixx="0.313" iyy="0.307" izz="0.031" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${column_outside_mass / 12.0 * (0.202*0.202 + 0.640*0.640)}"
+        iyy="${column_outside_mass / 12.0 * (0.010*0.010 + 0.640*0.640)}"
+        izz="${column_outside_mass / 12.0 * (0.010*0.010 + 0.202*0.202)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -154,10 +169,10 @@
     <child link = "column_inside_link" />
     <axis xyz="0 0 1" />
     <dynamics damping="0.5" friction="1.1"/>
-    <limit lower="0" upper="50.0" velocity="100" effort="5000"/> <!--only a lower limit and a realistically unachievable upper limit-->
+    <limit lower="0" upper="50.0" velocity="100" effort="5000"/>
   </joint> 
 
-  <!--lifting_column_inside-->
+  <!-- lifting_column_inside -->
   <link name="column_inside_link">
     <visual>
       <origin xyz="0 0 0.320"/>
@@ -173,9 +188,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="9.0"/>
+      <xacro:property name="column_inside_mass" value="9.0"/>
+      <mass value="${column_inside_mass}"/>
       <origin xyz="0 0 0.320"/>
-      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${column_inside_mass / 12.0 * (0.177*0.177 + 0.640*0.640)}"
+        iyy="${column_inside_mass / 12.0 * (0.120*0.120 + 0.640*0.640)}"
+        izz="${column_inside_mass / 12.0 * (0.120*0.120 + 0.177*0.177)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -185,7 +205,7 @@
     <child link = "middle_motor_box_link" />
   </joint> 
 
-  <!--middle motor box-->
+  <!-- middle motor box  -->
   <link name="middle_motor_box_link">
     <visual>
       <origin xyz="0 0 0.085"/>
@@ -201,9 +221,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="19.0"/>
+      <xacro:property name="middle_motor_box_mass" value="19.0"/>
+      <mass value="${middle_motor_box_mass}"/>
       <origin xyz="0 0 0.085"/>
-      <inertia ixx="0.092" iyy="0.092" izz="0.150" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.170*0.170)}"
+        iyy="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.170*0.170)}"
+        izz="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.218*0.218)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -213,7 +238,7 @@
     <child link = "upper_cylinder_link" />
   </joint> 
 
-  <!--cylinder connecting the upper boxes-->
+  <!-- cylinder connecting upper boxes -->
   <link name="upper_cylinder_link">
     <visual>
       <origin xyz="0 0 0.020"/>
@@ -229,22 +254,26 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="1.0"/>
+      <xacro:property name="upper_cylinder_mass" value="1.0"/>
+      <mass value="${upper_cylinder_mass}"/>
       <origin xyz="0 0 0.020"/>
-      <inertia ixx="0.007" iyy="0.007" izz="0.006" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${upper_cylinder_mass / 12.0 * (3*0.110*0.110 + 0.040*0.040)}"
+        iyy="${upper_cylinder_mass / 12.0 * (3*0.110*0.110 + 0.040*0.040)}"
+        izz="${upper_cylinder_mass / 2.0 * (0.110*0.110)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
-  <joint name = "upper_cylinder_upper_motor_joint" type = "continuous"> <!--coninuous = revolute with no limits -->
+  <joint name = "upper_cylinder_upper_motor_joint" type = "continuous">
     <origin xyz="0 0 0.040"/>
     <parent link = "upper_cylinder_link" />
     <child link = "upper_motor_box_link" />
     <dynamics damping="0.5" friction="0.1"/>
     <axis xyz="0 0 1" />
-    <!-- <limit lower="-3.141" upper="1.5708" velocity="1000" effort="500000"/> -->
   </joint> 
 
-  <!--upper motor box-->
+  <!-- upper motor box -->
   <link name="upper_motor_box_link">
     <visual>
       <origin xyz="-0.11575 0 0.08475"/>
@@ -260,22 +289,26 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="22.0"/>
+      <xacro:property name="upper_motor_box_mass" value="22.0"/>
+      <mass value="${upper_motor_box_mass}"/>
       <origin xyz="-0.11575 0 0.08475"/>
-      <inertia ixx="0.161" iyy="0.677" izz="0.784" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${upper_motor_box_mass / 12.0 * (0.223*0.223 + 0.1695*0.1695)}"
+        iyy="${upper_motor_box_mass / 12.0 * (0.4215*0.4215 + 0.1695*0.1695)}"
+        izz="${upper_motor_box_mass / 12.0 * (0.4215*0.4215 + 0.223*0.223)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
-  <joint name="upper_motor_box_arm_joint" type="continuous"> <!--coninuous = revolute with no limits -->
+  <joint name="upper_motor_box_arm_joint" type="continuous">
     <parent link="upper_motor_box_link"/>
     <child link="arm_first_link"/>
     <origin xyz="0.095 0 0.08475" rpy="0 -1.57079 3.1415926"/>
     <dynamics damping="0.5" friction="0.1"/>
     <axis xyz="0 0 1" rpy="0 0 0"/>
-    <!-- <limit lower="-1.5708" upper="0" velocity="1000" effort="5000"/>-->
   </joint>
 
-  <!--first arm link-->
+  <!-- arm_first_link -->
   <link name="arm_first_link">
     <visual>
       <origin xyz="0 0 0.074" rpy="0 0 0" />
@@ -291,9 +324,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="1.5"/>
+      <xacro:property name="arm_first_mass" value="1.5"/>
+      <mass value="${arm_first_mass}"/>
       <origin xyz="0 0 0.074" rpy="0 0 0" />
-      <inertia ixx="0.003" iyy="0.003" izz="0.0001688" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${arm_first_mass / 12.0 * (3*0.015*0.015 + 0.148*0.148)}"
+        iyy="${arm_first_mass / 12.0 * (3*0.015*0.015 + 0.148*0.148)}"
+        izz="${arm_first_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -303,6 +341,7 @@
     <origin xyz="0 0 0.148" rpy="0 -1.5708 0"/>
   </joint>
 
+  <!-- arm_second_link -->
   <link name="arm_second_link">
     <visual>
       <origin xyz="0 0 0.153" rpy="0 0 0"/>
@@ -318,9 +357,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.5"/>
+      <xacro:property name="arm_second_mass" value="0.5"/>
+      <mass value="${arm_second_mass}"/>
       <origin xyz="0 0 0.153" rpy="0 0 0"/>
-      <inertia ixx="0.004" iyy="0.004" izz="0.0000563" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${arm_second_mass / 12.0 * (3*0.015*0.015 + 0.306*0.306)}"
+        iyy="${arm_second_mass / 12.0 * (3*0.015*0.015 + 0.306*0.306)}"
+        izz="${arm_second_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -330,6 +374,7 @@
     <origin xyz="0 0 0.314" rpy="0 1.5708 0"/>
   </joint>
 
+  <!-- arm_third_link -->
   <link name="arm_third_link">
     <visual>
       <origin xyz="0 0 0.419"/>
@@ -345,9 +390,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="2.5"/>
+      <xacro:property name="arm_third_mass" value="2.5"/>
+      <mass value="${arm_third_mass}"/>
       <origin xyz="0 0 0.419"/>
-      <inertia ixx="0.146" iyy="0.146" izz="0.0002813" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${arm_third_mass / 12.0 * (3*0.015*0.015 + 0.838*0.838)}"
+        iyy="${arm_third_mass / 12.0 * (3*0.015*0.015 + 0.838*0.838)}"
+        izz="${arm_third_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
   
@@ -359,7 +409,7 @@
     <axis xyz="1 0 0" />
   </joint>
 
-  <!--BodyArms-->
+  <!-- BodyArms -->
   <link name="BodyArms_link">
     <visual>
       <origin xyz="0 0.100 0.005"/>
@@ -375,9 +425,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="9.0"/>
+      <xacro:property name="body_arms_mass" value="9.0"/>
+      <mass value="${body_arms_mass}"/>
       <origin xyz="0 0.100 0.005"/>
-      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${body_arms_mass / 12.0 * (0.200*0.200 + 0.040*0.040)}"
+        iyy="${body_arms_mass / 12.0 * (0.400*0.400 + 0.040*0.040)}"
+        izz="${body_arms_mass / 12.0 * (0.400*0.400 + 0.200*0.200)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -387,6 +442,7 @@
     <child link = "UpperBody_link" />
   </joint> 
 
+  <!-- UpperBody -->
   <link name="UpperBody_link">
     <visual>
       <origin xyz="0 0 0.20"/>
@@ -402,9 +458,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="40.0"/>
+      <xacro:property name="upper_body_mass" value="20.0"/>
+      <mass value="${upper_body_mass}"/>
       <origin xyz="0 0 0.20"/>
-      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${upper_body_mass / 12.0 * (0.100*0.100 + 0.550*0.550)}"
+        iyy="${upper_body_mass / 12.0 * (0.400*0.400 + 0.550*0.550)}"
+        izz="${upper_body_mass / 12.0 * (0.400*0.400 + 0.100*0.100)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -417,6 +478,7 @@
     <limit lower="-0.5708" upper="3.1415" velocity="1000" effort="500000"/> 
   </joint>
 
+  <!-- LowerBody -->
   <link name="LowerBody_link">
     <visual>
       <origin xyz="0 0 0.275"/>
@@ -432,9 +494,14 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="5.0"/>
+      <xacro:property name="lower_body_mass" value="5.0"/>
+      <mass value="${lower_body_mass}"/>
       <origin xyz="0 0 0.275"/>
-      <inertia ixx="0.317" iyy="0.308" izz="0.047" ixy="0" ixz="0" iyz="0"/>
+      <inertia
+        ixx="${lower_body_mass / 12.0 * (0.080*0.080 + 0.550*0.550)}"
+        iyy="${lower_body_mass / 12.0 * (0.300*0.300 + 0.550*0.550)}"
+        izz="${lower_body_mass / 12.0 * (0.300*0.300 + 0.080*0.080)}"
+        ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
 
@@ -447,7 +514,6 @@
   <link name="end_effector" />
 
   <!-- Gazebo material references -->
-  <!-- Grey links (frame, lower motor boxes) -->
   <gazebo reference="frame_link">
     <material>Gazebo/Grey</material>
   </gazebo>
@@ -464,13 +530,12 @@
     <material>Gazebo/Grey</material>
   </gazebo>
 
-  <!-- White links (columns, cylinder) -->
   <gazebo reference="column_outside_link">
     <material>Gazebo/White</material>
   </gazebo>
 
   <gazebo reference="BodyArms_link">
-  <material>Gazebo/White</material>
+    <material>Gazebo/White</material>
   </gazebo>
 
   <gazebo reference="UpperBody_link">
@@ -489,7 +554,6 @@
     <material>Gazebo/White</material>
   </gazebo>
 
-  <!-- Blue links (arm segments) -->
   <gazebo reference="arm_first_link">
     <material>Gazebo/Blue</material>
   </gazebo>
@@ -503,5 +567,3 @@
   </gazebo>
 
 </robot>
-
-
