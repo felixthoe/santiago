@@ -37,7 +37,7 @@ def generate_launch_description():
         ]),
     )
 
-    #spawn the bed in gazebo to test the collision of the robot with the bed
+    #spawn the bed in gazebo to test the collision of the robot with the bed 
     spawn_bed = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -84,7 +84,7 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        RegisterEventHandler(
+        RegisterEventHandler(   #added these event handlers for testing during debug sessions. They are not strictly necessary but left in because they ensure the correct order of loading the robot and the controllers)
             event_handler=OnProcessExit(
                 target_action=spawn_entity,
                 on_exit=[load_joint_state_broadcaster],
