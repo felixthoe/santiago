@@ -36,8 +36,8 @@ class PIDControllerPublisher(Node):
             if self.i <= 0.0:
                 self.reverse=False
         
-        self.base_rotation_reference = (self.i*1.5-1)*np.pi     # between -pi and pi/2 radians
-        self.arm_height_reference = self.i*0.16                 # between 0 and 0.16 meters
+        self.base_rotation_reference = (self.i*0.7-0.2)*np.pi     # originally was between -pi and pi/2 radians
+        self.arm_height_reference = self.i*0.3                  # between 0 and 0.3 meters
         self.arm_rotation_reference = -self.i*np.pi/2           # between -pi/2 and 0 radians
 
         # Fill in the message

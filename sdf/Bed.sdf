@@ -1,8 +1,9 @@
+<?xml version="1.0" ?>
+
 <!-- Bed model for Gazebo simulation
-    It is implemented as seperate .sdf file so the collision with the robot and the patient can be simulated)
+    It is implemented as seperate .sdf file so the collision with the robot and the patient can be simulated
 -->
 
-<?xml version="1.0" ?>
 <sdf version="1.7">
     <model name = "Bed">
         <static>true</static>

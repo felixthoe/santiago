@@ -1,19 +1,16 @@
 <!--
-  This is the URDF file for the robot model used in the Gazebo simulation. It defines the robot's structure, including its links, joints, and physical properties.
-  The robot consists of a base frame, a lifting column with two parts (inside and outside), three motor boxes (lower, middle, upper), an arm with three segments, and a body with upper and lower parts. 
+  This is the URDF file for the robot model used in the Gazebo simulation.
+
   The collsion and inertial properties all match the visual properties of the links.
-
-  There is a simplyfied model of a patient attached to the robot arm to simulate the weight of a human body and its effect on the robot's movement.
-
+  There is a simplified model of a patient attached to the robot arm to simulate the weight of a human body and its effect on the robot's movement.
   To make the weight of the patient easily adjustable, the mass of the patient can be changed by modifying the mass values of the links. 
-  This is also the main reason why the file is .xacro instead of .urdf, to allow for the use of xacro properties to easily adjust the mass values of the links without having to manually recalculate the correct inertia values each time.
-
+  This is also the main reason why the file is .urdf.xacro instead of .urdf, to allow for the use of xacro properties to easily adjust the mass values of the links without having to manually recalculate the correct inertia values each time.
   To make the inertia calculation easy for the developer the links are modeled as simple geometric shapes (boxes and cylinders) that are combined with fixed joints.(gazebo collapses links connected by fixed joints into a single link)
   
   The robot has three joints that are controlled with ROS2 control: 
-    the column_outside_column_inside_joint (prismatic joint for height), 
-    the upper_cylinder_upper_motor_joint (continuous joint for rotation), 
-    and the upper_motor_box_arm_joint (continuous joint for arm rotation).
+    column_outside_column_inside_joint (prismatic joint for height), 
+    upper_cylinder_upper_motor_joint (continuous joint for rotation), 
+    upper_motor_box_arm_joint (continuous joint for arm rotation).
 
   The robot structure with all its links in short is as follows:
 
@@ -36,16 +33,15 @@
   - arm_second_link
   - arm_third_link
 
-  Patient link:(loosely attached to the arm with a continuous joint but without actuator) (providing actuators can be subject of a future work to simulate patient movement)
+  Patient link:(loosely attached to the arm with a continuous joint but without actuator) (providing actuators can be subject of a future work to simulate movement of the patient)
   - BodyArms_link (link)
   - UpperBody_link (link)
 
-  (looslely attached to the upper body with a revolute joint with limits but also without actuator) (providing actuators can be subject of a future work to simulate patient movement)
+  (looslely attached to the upper body with a revolute joint with limits but also without actuator) (providing actuators can be subject of a future work to simulate movement of the patient)
   - LowerBody_link (link)
 
+
   (- end_effector (link))
-
-
 -->
 
 <?xml version="1.0"?>
@@ -71,7 +67,7 @@
     <color rgba="0.84375 0.70703125 0.53515625 1"/>
   </material>
 
-  <!--define initial values-->
+  <!--define initial joint configurations-->
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -111,7 +107,6 @@
   </gazebo>
 
   <!-- The Robot Description starts here:-->
-
   <link name="robot_base" />
 
   <joint name = "map_frame_joint" type = "fixed">
@@ -136,7 +131,7 @@
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="frame_link_mass" value="100.0"/>
+      <xacro:property name="frame_link_mass" value="200.0"/> <!-- especially high to stabilize-->
       <mass value="${frame_link_mass}"/>
       <origin xyz="0 0 0.040" />
       <inertia
@@ -508,7 +503,7 @@
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="upper_body_mass" value="20.0"/>
+      <xacro:property name="upper_body_mass" value="40.0"/>
       <mass value="${upper_body_mass}"/>
       <origin xyz="0 0 0.20"/>
       <inertia
@@ -525,7 +520,7 @@
     <origin xyz="0 0 0.490" rpy="0 0 0"/>
     <dynamics damping="0.5" friction="0.1"/>
     <axis xyz="1 0 0" />
-    <limit lower="-0.5708" upper="3.1415" velocity="1000" effort="500000"/> 
+    <limit lower="-0.5708" upper="2.00" velocity="1000" effort="500000"/> 
   </joint>
 
   <!-- LowerBody -->
@@ -544,7 +539,7 @@
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="lower_body_mass" value="5.0"/>
+      <xacro:property name="lower_body_mass" value="30.0"/>
       <mass value="${lower_body_mass}"/>
       <origin xyz="0 0 0.275"/>
       <inertia
