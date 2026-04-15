@@ -1,0 +1,46 @@
+<!--
+  This is the URDF file for the robot model used in the Gazebo simulation.
+  (including the comment in the urdf file has lead to errors when parsing)
+
+  The collsion and inertial properties all match the visual properties of the links.
+  There is a simplified model of a patient attached to the robot arm to simulate the weight of a human body and its effect on the robot's movement.
+  To make the weight of the patient easily adjustable, the mass of the patient can be changed by modifying the mass values of the links. 
+  This is also the main reason why the file is .urdf.xacro instead of .urdf, to allow for the use of xacro properties to easily adjust the mass values of the links without having to manually recalculate the correct inertia values each time.
+  To make the inertia calculation easy for the developer the links are modeled as simple geometric shapes (boxes and cylinders) that are combined with fixed joints.(gazebo collapses links connected by fixed joints into a single link)
+  
+  The robot has three joints that are controlled with ROS2 control: 
+    column_outside_column_inside_joint (prismatic joint for height), 
+    upper_cylinder_upper_motor_joint (continuous joint for rotation), 
+    upper_motor_box_arm_joint (continuous joint for arm rotation).
+
+  The robot structure with all its links in short is as follows:
+
+  first link:
+  - robot_base
+  - frame_link
+  - lower_motor_box_link
+  - column_outside_link
+
+  second link:
+  - column_inside_link
+  - middle_motor_box_link
+  - upper_cylinder_link
+
+  third link:
+  - upper_motor_box_link
+
+  fourth link:
+  - arm_first_link
+  - arm_second_link
+  - arm_third_link
+
+  Patient link:(loosely attached to the arm with a continuous joint but without actuator) (providing actuators can be subject of a future work to simulate movement of the patient)
+  - BodyArms_link (link)
+  - UpperBody_link (link)
+
+  (looslely attached to the upper body with a revolute joint with limits but also without actuator) (providing actuators can be subject of a future work to simulate movement of the patient)
+  - LowerBody_link (link)
+
+
+  (- end_effector (link))
+-->

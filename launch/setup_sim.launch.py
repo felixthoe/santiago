@@ -24,7 +24,7 @@ def generate_launch_description():
 
     # Specify the name of the package and path to urdf file within the package
     pkg_name = 'gazebo_simulation'
-    file_subpath = 'urdf/robot.urdf'
+    file_subpath = 'urdf/robot.urdf.xacro'
 
     # Use xacro to process the file
     xacro_file = os.path.join(get_package_share_directory(pkg_name),file_subpath)
@@ -32,9 +32,33 @@ def generate_launch_description():
 
     # load an empty gazebo world
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py'
-        ]),
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory('gazebo_ros'),
+                'launch',
+                'gazebo.launch.py'
+            )
+        ),
+        launch_arguments={
+            'gui': 'false', # GUI crashes on WSL
+            'extra_gazebo_args': '-s libgazebo_ros_factory.so'
+        }.items()
+    )
+
+    # load RViz with the robot model
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+    )
+
+    # used to display the human joints in rviz
+    joint_state_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        parameters=[{'use_sim_time': True}]
     )
 
     #spawn the bed in gazebo to test the collision of the robot with the bed 
@@ -82,6 +106,8 @@ def generate_launch_description():
     return LaunchDescription([
         declare_controller_arg,
         gazebo,
+        rviz,
+        joint_state_publisher,
         node_robot_state_publisher,
         spawn_entity,
         RegisterEventHandler(   #added these event handlers for testing during debug sessions. They are not strictly necessary but left in because they ensure the correct order of loading the robot and the controllers)
