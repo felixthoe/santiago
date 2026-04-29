@@ -37,8 +37,8 @@ class PIDControllerPublisher(Node):
                 self.reverse=False
         
         self.base_rotation_reference = (self.i*0.7-0.2)*np.pi     # originally was between -pi and pi/2 radians
-        self.arm_height_reference = self.i*0.3                  # between 0 and 0.3 meters
-        self.arm_rotation_reference = -self.i*np.pi/2           # between -pi/2 and 0 radians
+        self.arm_height_reference = self.i*0.5                  # between 0 and 0.3 meters
+        self.arm_rotation_reference = -self.i*np.pi/2*2           # between -pi/2 and 0 radians
 
         # Fill in the message
         msg.values = [self.base_rotation_reference, self.arm_height_reference, self.arm_rotation_reference]

@@ -1,0 +1,374 @@
+<?xml version="1.0" ?>
+<robot name="robot">
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+  <material name="red">
+    <color rgba="0.7 0 0 1"/>
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+  <material name="brown">
+    <color rgba="0.163 0.155 0.120 1"/>
+  </material>
+  <material name="oak">
+    <color rgba="0.84375 0.70703125 0.53515625 1"/>
+  </material>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="upper_cylinder_upper_motor_joint">
+      <command_interface name="effort"/>
+      <state_interface name="position">
+        <param name="initial_value">0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="column_outside_column_inside_joint">
+      <command_interface name="effort"/>
+      <state_interface name="position">
+        <param name="initial_value">0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="upper_motor_box_arm_joint">
+      <command_interface name="effort"/>
+      <state_interface name="position">
+        <param name="initial_value">0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>/home/uwxvp/ws_Aufstehhilfe/santiago/install/gazebo_simulation/share/gazebo_simulation/config/controller_manager.yaml</parameters>
+    </plugin>
+    <plugin filename="libgazebo_ros_force_system.so" name="gazebo_ros_force_system">
+    </plugin>
+  </gazebo>
+
+  <link name="robot_base"/>
+
+  <joint name="map_frame_joint" type="fixed">
+    <origin xyz="0.35575 -0.180 0"/>
+    <parent link="robot_base"/>
+    <child link="frame_link"/>
+  </joint>
+
+  <link name="frame_link">
+    <visual>
+      <origin xyz="0 0 0.040"/>
+      <geometry>
+        <box size="1.395 0.645 0.080"/>
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.040"/>
+      <geometry>
+        <box size="1.395 0.645 0.080"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="20000.0"/>
+      <origin xyz="0 0 0.040"/>
+      <inertia ixx="704.0416666666667" ixy="0" ixz="0" iyy="3254.041666666667" iyz="0" izz="3936.75"/>
+    </inertial>
+  </link>
+
+  <joint name="frame_lower_motor_box_joint" type="fixed">
+    <origin xyz="-0.35575 0.180 0.080"/>
+    <parent link="frame_link"/>
+    <child link="lower_motor_box_link"/>
+  </joint>
+
+  <link name="lower_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="28.0"/>
+      <origin xyz="0 0 0.110"/>
+      <inertia ixx="0.22382266666666667" ixy="0" ixz="0" iyy="0.22230191666666668" iyz="0" izz="0.22025791666666666"/>
+    </inertial>
+  </link>
+
+  <joint name="lower_motor_box_column_outside_joint" type="fixed">
+    <origin xyz="0 0 0.220"/>
+    <parent link="lower_motor_box_link"/>
+    <child link="column_outside_link"/>
+  </joint>
+
+  <link name="column_outside_link">
+    <visual>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0.065 0 0.320"/>
+      <inertia ixx="0.00037533666666666674" ixy="0" ixz="0" iyy="0.0003414166666666667" iyz="0" izz="3.408666666666668e-05"/>
+    </inertial>
+  </link>
+
+  <joint name="column_outside_column_inside_joint" type="prismatic">
+    <origin xyz="0 0 0.005"/>
+    <parent link="column_outside_link"/>
+    <child link="column_inside_link"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.5" friction="1.1"/>
+    <limit effort="5000" lower="0" upper="50.0" velocity="100"/>
+  </joint>
+
+  <link name="column_inside_link">
+    <visual>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="9.0"/>
+      <origin xyz="0 0 0.320"/>
+      <inertia ixx="0.33069675" ixy="0" ixz="0" iyy="0.31800000000000006" iyz="0" izz="0.034296749999999994"/>
+    </inertial>
+  </link>
+
+  <joint name="column_inside_joint" type="fixed">
+    <origin xyz="0 0 0.650"/>
+    <parent link="column_inside_link"/>
+    <child link="middle_motor_box_link"/>
+  </joint>
+
+  <link name="middle_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="19.0"/>
+      <origin xyz="0 0 0.085"/>
+      <inertia ixx="0.12100466666666668" ixy="0" ixz="0" iyy="0.12100466666666668" iyz="0" izz="0.15049266666666664"/>
+    </inertial>
+  </link>
+
+  <joint name="middle_box_upper_cylinder_joint" type="fixed">
+    <origin xyz="0 0 0.170"/>
+    <parent link="middle_motor_box_link"/>
+    <child link="upper_cylinder_link"/>
+  </joint>
+
+  <link name="upper_cylinder_link">
+    <visual>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0.020"/>
+      <inertia ixx="0.003158333333333333" ixy="0" ixz="0" iyy="0.003158333333333333" iyz="0" izz="0.00605"/>
+    </inertial>
+  </link>
+
+  <joint name="upper_cylinder_upper_motor_joint" type="continuous">
+    <origin xyz="0 0 0.040"/>
+    <parent link="upper_cylinder_link"/>
+    <child link="upper_motor_box_link"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="upper_motor_box_link">
+    <visual>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="22.0"/>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <inertia ixx="0.14384195833333335" ixy="0" ixz="0" iyy="0.37838625" iyz="0" izz="0.4168839583333333"/>
+    </inertial>
+  </link>
+
+  <joint name="upper_motor_box_arm_joint" type="continuous">
+    <parent link="upper_motor_box_link"/>
+    <child link="arm_first_link"/>
+    <origin rpy="0 -1.57079 3.1415926" xyz="0.095 0 0.08475"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="arm_first_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.074"/>
+      <geometry>
+        <cylinder length="0.148" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.074"/>
+      <geometry>
+        <cylinder length="0.148" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <origin rpy="0 0 0" xyz="0 0 0.074"/>
+      <inertia ixx="0.0028223749999999994" ixy="0" ixz="0" iyy="0.0028223749999999994" iyz="0" izz="0.00016875"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_first_joint" type="fixed">
+    <parent link="arm_first_link"/>
+    <child link="arm_second_link"/>
+    <origin rpy="0 -1.5708 0" xyz="0 0 0.148"/>
+  </joint>
+
+  <link name="arm_second_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.153"/>
+      <geometry>
+        <cylinder length="0.306" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.153"/>
+      <geometry>
+        <cylinder length="0.306" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <origin rpy="0 0 0" xyz="0 0 0.153"/>
+      <inertia ixx="0.003929624999999999" ixy="0" ixz="0" iyy="0.003929624999999999" iyz="0" izz="5.625e-05"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_second_joint" type="fixed">
+    <parent link="arm_second_link"/>
+    <child link="arm_third_link"/>
+    <origin rpy="0 1.5708 0" xyz="0 0 0.314"/>
+  </joint>
+
+  <link name="arm_third_link">
+    <visual>
+      <origin xyz="0 0 0.419"/>
+      <geometry>
+        <cylinder length="0.838" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.419"/>
+      <geometry>
+        <cylinder length="0.838" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.5"/>
+      <origin xyz="0 0 0.419"/>
+      <inertia ixx="0.14644145833333333" ixy="0" ixz="0" iyy="0.14644145833333333" iyz="0" izz="0.00028125"/>
+    </inertial>
+  </link>
+
+  <joint name="end_effector_joint" type="fixed">
+    <parent link="arm_third_link"/>
+    <child link="end_effector"/>
+    <origin rpy="0 -1.5708 0" xyz="0 0 0.838"/>
+  </joint>
+
+  <link name="end_effector"/>
+
+  <gazebo reference="frame_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="lower_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="middle_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="upper_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="column_outside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="column_inside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="upper_cylinder_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="arm_first_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="arm_second_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="arm_third_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+</robot>

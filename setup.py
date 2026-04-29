@@ -31,6 +31,9 @@ setup(
             'pid_controller_publisher = gazebo_simulation.pid_controller_publisher:main',
             'apply_wrench = gazebo_simulation.apply_wrench:main',
             'listener = gazebo_simulation.listener:main',
+            'test1 = gazebo_simulation.test1:main',
+            'trajectory_publisher2 = gazebo_simulation.trajectory_publisher2:main',
+            'aan_control = gazebo_simulation.aan_control:main',
         ],
-    },
+    }
 )

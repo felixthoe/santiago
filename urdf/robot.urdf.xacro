@@ -26,30 +26,38 @@
     <hardware>
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
-    <joint name="upper_cylinder_upper_motor_joint"> <!-- rotation joint -->
-      <command_interface name="effort"/>
-      <state_interface name="position">
-        <param name="initial_value">0</param>
-      </state_interface>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-    <joint name="column_outside_column_inside_joint"> <!-- height joint -->
-      <command_interface name="effort"/>
-      <state_interface name="position">
-        <param name="initial_value">0.0</param>
-      </state_interface>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
-    <joint name="upper_motor_box_arm_joint">  <!-- arm rotation joint -->
-      <command_interface name="effort"/>
-      <state_interface name="position">
-        <param name="initial_value">0</param>
-      </state_interface>
-      <state_interface name="velocity"/>
-      <state_interface name="effort"/>
-    </joint>
+      <joint name="upper_cylinder_upper_motor_joint"> <!-- rotation joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <joint name="column_outside_column_inside_joint"> <!-- height joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <joint name="upper_motor_box_arm_joint">  <!-- arm rotation joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
   </ros2_control>
 
   <gazebo>
@@ -61,7 +69,8 @@
   </gazebo>
 
   <!-- The Robot Description starts here:-->
-  <link name="robot_base" />
+  <link name="robot_base"/>
+  
 
   <joint name = "map_frame_joint" type = "fixed">
     <origin xyz="0.35575 -0.180 0"/>
@@ -85,7 +94,7 @@
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="frame_link_mass" value="200.0"/> <!-- especially high to stabilize-->
+      <xacro:property name="frame_link_mass" value="20000.0"/> <!-- specially high to stabilize-->
       <mass value="${frame_link_mass}"/>
       <origin xyz="0 0 0.040" />
       <inertia
@@ -482,14 +491,14 @@
     <visual>
       <origin xyz="0 0 0.275"/>
       <geometry>
-        <box size="0.300 0.080 0.550"/>      
+        <box size="0.300 0.080 0.90"/>      
       </geometry>
       <material name="white"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0.275"/>
+      <origin xyz="0 0 0"/>
       <geometry>
-        <box size="0.300 0.080 0.550"/>      
+        <box size="0 0 0"/>      
       </geometry>
     </collision>
     <inertial>
