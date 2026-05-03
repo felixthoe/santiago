@@ -4,7 +4,6 @@ import sympy as sp
 import rclpy
 from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from builtin_interfaces.msg import Duration  # nicht zwingend nötig, aber sauber
 
 
 class TrajectoryPublisher(Node):
@@ -19,13 +18,13 @@ class TrajectoryPublisher(Node):
         )
 
         self.timer_period = 0.1
+        self.trajectory_published = False
+
+        # Publish once after startup
         self.timer = self.create_timer(
-            self.timer_period,
+            1.0,
             self.controller_publisher_callback
         )
-
-        self.controller_call_counter = 0
-        self.start_time = None   # wird im ersten Callback gesetzt
 
         # Time targets
         self.t_01_target = 25.0
@@ -60,10 +59,10 @@ class TrajectoryPublisher(Node):
         self.dsigma_12_func = sp.lambdify(t, dsigma_12, 'numpy')
 
         # Reference target points
-        self.q_0_ref = np.array([0.0, 0.0, 0.0])                    # [0°, 0 m, 0°]
-        self.q_1_ref = np.array([0.610865, 0.1, 0.698132])        # [-35°, 0.1 m, -40°]
-        self.q_2_ref = np.array([1.047198, 0.1, 0.820305])        # [-60°, 0.1 m, -47°]
-        
+        self.q_0_ref = np.array([0.0, 0.0, 0.0])
+        self.q_1_ref = np.array([-0.610865, 0.1, -0.698132])
+        self.q_2_ref = np.array([-1.047198, 0.1, -0.820305])
+
         self.joint_names = [
             'upper_cylinder_upper_motor_joint',
             'column_outside_column_inside_joint',
@@ -72,13 +71,15 @@ class TrajectoryPublisher(Node):
 
     def target_calculator(self, t):
         """
-        Calculates q_ref and dq_ref for the current time t (seconds from start).
+        Calculates q_ref and dq_ref for the current time t in seconds.
         """
+
         # Segment 1: q0 -> q1
         if 0.0 <= t <= self.t_01_target:
             tau = t
             sigma = self.sigma_01_func(tau)
             dsigma = self.dsigma_01_func(tau)
+
             q_ref = self.q_0_ref + sigma * (self.q_1_ref - self.q_0_ref)
             dq_ref = dsigma * (self.q_1_ref - self.q_0_ref)
 
@@ -92,6 +93,7 @@ class TrajectoryPublisher(Node):
             tau = t - self.t_01_target - self.t_p_target
             sigma = self.sigma_12_func(tau)
             dsigma = self.dsigma_12_func(tau)
+
             q_ref = self.q_1_ref + sigma * (self.q_2_ref - self.q_1_ref)
             dq_ref = dsigma * (self.q_2_ref - self.q_1_ref)
 
@@ -103,43 +105,59 @@ class TrajectoryPublisher(Node):
         return q_ref, dq_ref
 
     def controller_publisher_callback(self):
-        # Set start time on first call
-        if self.start_time is None:
-            self.start_time = self.get_clock().now()
-        
-        self.get_logger().info("publishing...")
+        """
+        Publishes the complete trajectory once.
+        """
+
+        if self.trajectory_published:
+            return
+
+        self.get_logger().info("Publishing full trajectory...")
 
         msg = JointTrajectory()
         msg.joint_names = self.joint_names
-        msg.header.stamp = self.start_time.to_msg()   
 
-        t_global = self.controller_call_counter * self.timer_period
+        # Trajectory starts now
+        msg.header.stamp = self.get_clock().now().to_msg()
 
-        N = 2
         dt = self.timer_period
+        num_points = int(self.t_total / dt)
 
-        for i in range(N):
-            t_i = t_global + i * dt         
+        for k in range(num_points + 1):
+            t_i = k * dt
+
             q_ref, dq_ref = self.target_calculator(t_i)
 
             point = JointTrajectoryPoint()
             point.positions = q_ref.tolist()
             point.velocities = dq_ref.tolist()
 
-           
-            time_from_start = t_i
-            point.time_from_start.sec = int(time_from_start)
-            point.time_from_start.nanosec = int((time_from_start % 1.0) * 1e9)
+            point.time_from_start.sec = int(t_i)
+            point.time_from_start.nanosec = int((t_i % 1.0) * 1e9)
 
             msg.points.append(point)
 
-        self.publisher_.publish(msg)
-        self.controller_call_counter += 1
+        hold_time = self.t_total + 5.0
 
-     
-        if t_global >= self.t_total:
-            self.get_logger().info("Trajectory finished, cancelling timer.")
-            self.timer.cancel()
+        q_ref, _ = self.target_calculator(self.t_total)
+
+        hold_point = JointTrajectoryPoint()
+        hold_point.positions = q_ref.tolist()
+        hold_point.velocities = [0.0, 0.0, 0.0]
+
+        hold_point.time_from_start.sec = int(hold_time)
+        hold_point.time_from_start.nanosec = int((hold_time % 1.0) * 1e9)
+
+        msg.points.append(hold_point)
+
+        self.publisher_.publish(msg)
+
+        self.get_logger().info(
+            f"Published full trajectory with {len(msg.points)} points."
+        )
+
+        self.trajectory_published = True
+        self.timer.cancel()
 
 
 def main(args=None):

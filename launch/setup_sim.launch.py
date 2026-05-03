@@ -119,6 +119,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Time matching
+    Node(
+        package='gazebo_simulation',
+        executable='helloise_trajektorie',
+        parameters=[{'use_sim_time': True}],
+    )
+
     # Run the launch description
     return LaunchDescription([
         declare_controller_arg,

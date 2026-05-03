@@ -33,7 +33,7 @@ setup(
             'listener = gazebo_simulation.listener:main',
             'test1 = gazebo_simulation.test1:main',
             'trajectory_publisher2 = gazebo_simulation.trajectory_publisher2:main',
-            'aan_control = gazebo_simulation.aan_control:main',
+            'helloise_trajektorie = gazebo_simulation.helloise_trajektorie:main',
         ],
     }
 )
