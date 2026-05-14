@@ -60,7 +60,7 @@ M00_const = 55.0
 M22_const = 0.263
 
 # Anzahl LUT-Stützstellen pro Dimension
-N_LUT = 20
+N_LUT = 10
 
 # Anzahl Zufallstests
 N_TEST = 1000
@@ -334,7 +334,7 @@ print(f"Max |ΔC|  : {max_err_C:.3f}")
 
 np.savez(
     SAVE_PATH,
-    grid_vecs=grid_vecs,
+    grid_vecs=np.array(grid_vecs),
     M11=M11_vals,
     M01=M01_vals,
     M02=M02_vals,
