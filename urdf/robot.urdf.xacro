@@ -1,0 +1,577 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="red">
+    <color rgba="0.7 0 0 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>  
+  
+  <material name="brown">
+    <color rgba="0.163 0.155 0.120 1"/>
+  </material>
+
+  <material name="oak">
+    <color rgba="0.84375 0.70703125 0.53515625 1"/>
+  </material>
+
+  <!--define initial joint configurations-->
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+      <joint name="upper_cylinder_upper_motor_joint"> <!-- rotation joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <joint name="column_outside_column_inside_joint"> <!-- height joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <joint name="upper_motor_box_arm_joint">  <!-- arm rotation joint -->
+        <command_interface name="position"/>
+        <command_interface name="velocity"/>
+        <command_interface name="effort"/>
+        <state_interface name="position">
+          <param name="initial_value">0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">  
+      <parameters>$(find gazebo_simulation)/config/controller_manager.yaml</parameters>
+    </plugin>
+    <plugin name="gazebo_ros_force_system" filename="libgazebo_ros_force_system.so">
+    </plugin>
+  </gazebo>
+
+  <!-- The Robot Description starts here:-->
+  <link name="robot_base"/>
+  
+
+  <joint name = "map_frame_joint" type = "fixed">
+    <origin xyz="0.35575 -0.180 0"/>
+    <parent link = "robot_base" />
+    <child link = "frame_link" />
+  </joint> 
+
+  <!-- Base frame -->
+  <link name="frame_link">
+    <visual>
+      <origin xyz="0 0 0.040" />
+      <geometry>
+        <box size="1.395 0.645 0.080"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.040" />
+      <geometry>
+        <box size="1.395 0.645 0.080"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="frame_link_mass" value="20000.0"/> <!-- specially high to stabilize-->
+      <mass value="${frame_link_mass}"/>
+      <origin xyz="0 0 0.040" />
+      <inertia
+        ixx="${frame_link_mass / 12.0 * (0.645*0.645 + 0.080*0.080)}"
+        iyy="${frame_link_mass / 12.0 * (1.395*1.395 + 0.080*0.080)}"
+        izz="${frame_link_mass / 12.0 * (1.395*1.395 + 0.645*0.645)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  
+  <joint name = "frame_lower_motor_box_joint" type = "fixed">
+    <origin xyz="-0.35575 0.180 0.080"/>
+    <parent link = "frame_link" />
+    <child link = "lower_motor_box_link" />
+  </joint> 
+
+  <!-- lower motor box -->
+  <link name="lower_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.110"/>
+      <geometry>
+        <box size="0.2165 0.218 0.220"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="lower_motor_box_mass" value="28.0"/> <!-- mass of the lower motor box AND the outside column (see mass property of outside column for explanation) -->
+      <mass value="${lower_motor_box_mass}"/>
+      <origin xyz="0 0 0.110" />
+      <inertia
+        ixx="${lower_motor_box_mass / 12.0 * (0.218*0.218 + 0.220*0.220)}"
+        iyy="${lower_motor_box_mass / 12.0 * (0.2165*0.2165 + 0.220*0.220)}"
+        izz="${lower_motor_box_mass / 12.0 * (0.2165*0.2165 + 0.218*0.218)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "lower_motor_box_column_outside_joint" type = "fixed">
+    <origin xyz="0 0 0.220"/>
+    <parent link = "lower_motor_box_link" />
+    <child link = "column_outside_link" />
+  </joint> 
+
+  <!-- lifting_column_outside -->
+  <link name="column_outside_link">
+    <visual>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.065 0 0.320"/>
+      <geometry>
+        <box size="0.010 0.202 0.640"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="column_outside_mass" value="0.5"/> <!-- mass of the outside column is near zero because it is a simplification for the collsion and visual representation that is a bad inertial representation. The mass is added to the lower motor box instead.-->
+      <mass value="${column_outside_mass}"/>
+      <origin xyz="0.065 0 0.320"/>
+      <inertia
+        ixx="${column_outside_mass / 12.0 * (0.202*0.202 + 0.640*0.640)}"
+        iyy="${column_outside_mass / 12.0 * (0.010*0.010 + 0.640*0.640)}"
+        izz="${column_outside_mass / 12.0 * (0.010*0.010 + 0.202*0.202)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "column_outside_column_inside_joint" type = "prismatic">
+    <origin xyz="0 0 0.005"/>
+    <parent link = "column_outside_link" />
+    <child link = "column_inside_link" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0.5" friction="1.1"/>
+    <limit lower="0" upper="50.0" velocity="100" effort="500000"/>
+  </joint> 
+
+  <!-- lifting_column_inside -->
+  <link name="column_inside_link">
+    <visual>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.320"/>
+      <geometry>
+        <box size="0.120 0.177 0.640"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="column_inside_mass" value="9.0"/>
+      <mass value="${column_inside_mass}"/>
+      <origin xyz="0 0 0.320"/>
+      <inertia
+        ixx="${column_inside_mass / 12.0 * (0.177*0.177 + 0.640*0.640)}"
+        iyy="${column_inside_mass / 12.0 * (0.120*0.120 + 0.640*0.640)}"
+        izz="${column_inside_mass / 12.0 * (0.120*0.120 + 0.177*0.177)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "column_inside_joint" type = "fixed">
+    <origin xyz="0 0 0.650"/>
+    <parent link = "column_inside_link" />
+    <child link = "middle_motor_box_link" />
+  </joint> 
+
+  <!-- middle motor box  -->
+  <link name="middle_motor_box_link">
+    <visual>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.085"/>
+      <geometry>
+        <box size="0.218 0.218 0.170"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="middle_motor_box_mass" value="19.0"/>
+      <mass value="${middle_motor_box_mass}"/>
+      <origin xyz="0 0 0.085"/>
+      <inertia
+        ixx="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.170*0.170)}"
+        iyy="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.170*0.170)}"
+        izz="${middle_motor_box_mass / 12.0 * (0.218*0.218 + 0.218*0.218)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "middle_box_upper_cylinder_joint" type = "fixed">
+    <origin xyz="0 0 0.170"/>
+    <parent link = "middle_motor_box_link" />
+    <child link = "upper_cylinder_link" />
+  </joint> 
+
+  <!-- cylinder connecting upper boxes -->
+  <link name="upper_cylinder_link">
+    <visual>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.020"/>
+      <geometry>
+        <cylinder length="0.040" radius="0.110"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="upper_cylinder_mass" value="1.0"/>
+      <mass value="${upper_cylinder_mass}"/>
+      <origin xyz="0 0 0.020"/>
+      <inertia
+        ixx="${upper_cylinder_mass / 12.0 * (3*0.110*0.110 + 0.040*0.040)}"
+        iyy="${upper_cylinder_mass / 12.0 * (3*0.110*0.110 + 0.040*0.040)}"
+        izz="${upper_cylinder_mass / 2.0 * (0.110*0.110)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "upper_cylinder_upper_motor_joint" type = "continuous">
+    <origin xyz="0 0 0.040"/>
+    <parent link = "upper_cylinder_link" />
+    <child link = "upper_motor_box_link" />
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="0 0 1" />
+  </joint> 
+
+  <!-- upper motor box -->
+  <link name="upper_motor_box_link">
+    <visual>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>      
+      </geometry>
+      <material name="brown"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <geometry>
+        <box size="0.4215 0.223 0.1695"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="upper_motor_box_mass" value="22.0"/>
+      <mass value="${upper_motor_box_mass}"/>
+      <origin xyz="-0.11575 0 0.08475"/>
+      <inertia
+        ixx="${upper_motor_box_mass / 12.0 * (0.223*0.223 + 0.1695*0.1695)}"
+        iyy="${upper_motor_box_mass / 12.0 * (0.4215*0.4215 + 0.1695*0.1695)}"
+        izz="${upper_motor_box_mass / 12.0 * (0.4215*0.4215 + 0.223*0.223)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="upper_motor_box_arm_joint" type="continuous">
+    <parent link="upper_motor_box_link"/>
+    <child link="arm_first_link"/>
+    <origin xyz="0.095 0 0.08475" rpy="0 -1.57079 3.1415926"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+  </joint>
+
+  <!-- arm_first_link -->
+  <link name="arm_first_link">
+    <visual>
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.148" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.148" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="arm_first_mass" value="1.5"/>
+      <mass value="${arm_first_mass}"/>
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
+      <inertia
+        ixx="${arm_first_mass / 12.0 * (3*0.015*0.015 + 0.148*0.148)}"
+        iyy="${arm_first_mass / 12.0 * (3*0.015*0.015 + 0.148*0.148)}"
+        izz="${arm_first_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_first_joint" type="fixed">
+    <parent link="arm_first_link"/>
+    <child link="arm_second_link"/>
+    <origin xyz="0 0 0.148" rpy="0 -1.5708 0"/>
+  </joint>
+
+  <!-- arm_second_link -->
+  <link name="arm_second_link">
+    <visual>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.306" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.306" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="arm_second_mass" value="0.5"/>
+      <mass value="${arm_second_mass}"/>
+      <origin xyz="0 0 0.153" rpy="0 0 0"/>
+      <inertia
+        ixx="${arm_second_mass / 12.0 * (3*0.015*0.015 + 0.306*0.306)}"
+        iyy="${arm_second_mass / 12.0 * (3*0.015*0.015 + 0.306*0.306)}"
+        izz="${arm_second_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="arm_second_joint" type="fixed">
+    <parent link="arm_second_link"/>
+    <child link="arm_third_link"/>
+    <origin xyz="0 0 0.314" rpy="0 1.5708 0"/>
+  </joint>
+
+  <!-- arm_third_link -->
+  <link name="arm_third_link">
+    <visual>
+      <origin xyz="0 0 0.419"/>
+      <geometry>
+        <cylinder length="0.838" radius="0.015"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.419"/>
+      <geometry>
+        <cylinder length="0.838" radius="0.015"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="arm_third_mass" value="2.5"/>
+      <mass value="${arm_third_mass}"/>
+      <origin xyz="0 0 0.419"/>
+      <inertia
+        ixx="${arm_third_mass / 12.0 * (3*0.015*0.015 + 0.838*0.838)}"
+        iyy="${arm_third_mass / 12.0 * (3*0.015*0.015 + 0.838*0.838)}"
+        izz="${arm_third_mass / 2.0 * (0.015*0.015)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  
+  <joint name="robot_Body_joint" type="continuous">
+    <parent link="arm_third_link"/>
+    <child link="BodyArms_link"/>
+    <origin xyz="0.015 0 0.419" rpy="0 1.5708 0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <!-- BodyArms -->
+  <link name="BodyArms_link">
+    <visual>
+      <origin xyz="0 0.100 0.005"/>
+      <geometry>
+        <box size="0.400 0.200 0.040"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0.100 0.005"/>
+      <geometry>
+        <box size="0.400 0.200 0.040"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="body_arms_mass" value="9.0"/>
+      <mass value="${body_arms_mass}"/>
+      <origin xyz="0 0.100 0.005"/>
+      <inertia
+        ixx="${body_arms_mass / 12.0 * (0.200*0.200 + 0.040*0.040)}"
+        iyy="${body_arms_mass / 12.0 * (0.400*0.400 + 0.040*0.040)}"
+        izz="${body_arms_mass / 12.0 * (0.400*0.400 + 0.200*0.200)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name = "BodyArms_UpperBody_joint" type = "fixed">
+    <origin xyz="0 0.200 -0.100"/>
+    <parent link = "BodyArms_link" />
+    <child link = "UpperBody_link" />
+  </joint> 
+
+  <!-- UpperBody -->
+  <link name="UpperBody_link">
+    <visual>
+      <origin xyz="0 0 0.20"/>
+      <geometry>
+        <box size="0.400 0.100 0.550"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.20"/>
+      <geometry>
+        <box size="0.400 0.100 0.550"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="upper_body_mass" value="40.0"/>
+      <mass value="${upper_body_mass}"/>
+      <origin xyz="0 0 0.20"/>
+      <inertia
+        ixx="${upper_body_mass / 12.0 * (0.100*0.100 + 0.550*0.550)}"
+        iyy="${upper_body_mass / 12.0 * (0.400*0.400 + 0.550*0.550)}"
+        izz="${upper_body_mass / 12.0 * (0.400*0.400 + 0.100*0.100)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="Upper_Lower_Body_joint" type="revolute">
+    <parent link="UpperBody_link"/>
+    <child link="LowerBody_link"/>
+    <origin xyz="0 0 0.490" rpy="0 0 0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+    <axis xyz="1 0 0" />
+    <limit lower="-0.5708" upper="2.00" velocity="1000" effort="500000"/> 
+  </joint>
+
+  <!-- LowerBody -->
+  <link name="LowerBody_link">
+    <visual>
+      <origin xyz="0 0 0.275"/>
+      <geometry>
+        <box size="0.300 0.080 0.90"/>      
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0 0 0"/>      
+      </geometry>
+    </collision>
+    <inertial>
+      <xacro:property name="lower_body_mass" value="30.0"/>
+      <mass value="${lower_body_mass}"/>
+      <origin xyz="0 0 0.275"/>
+      <inertia
+        ixx="${lower_body_mass / 12.0 * (0.080*0.080 + 0.550*0.550)}"
+        iyy="${lower_body_mass / 12.0 * (0.300*0.300 + 0.550*0.550)}"
+        izz="${lower_body_mass / 12.0 * (0.300*0.300 + 0.080*0.080)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="end_effector_joint" type="fixed">
+    <parent link="arm_third_link"/>
+    <child link="end_effector"/>
+    <origin xyz="0 0 0.838" rpy="0 -1.5708 0"/>
+  </joint>
+
+  <link name="end_effector" /> 
+
+  <!-- Gazebo material references. only for color purposes -->
+  <gazebo reference="frame_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="lower_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="middle_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="upper_motor_box_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="column_outside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="BodyArms_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="UpperBody_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="Bed_center_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="column_inside_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="upper_cylinder_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="arm_first_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="arm_second_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <gazebo reference="arm_third_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+</robot>

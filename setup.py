@@ -30,8 +30,15 @@ setup(
             'pid_controller_publisher = gazebo_simulation.pid_controller_publisher:main',
             'apply_wrench = gazebo_simulation.apply_wrench:main',
             'listener = gazebo_simulation.listener:main',
+<<<<<<< HEAD
             'trajectory_santiago = gazebo_simulation.trajectory_santiago_test_simple_cfg_space_positions:main',
             'trajectory_santiago_one = gazebo_simulation.trajectory_santiago_test_simple_cfg_space_positions_onemessage:main',
+=======
+            'test1 = gazebo_simulation.test1:main',
+            'trajectory_publisher2 = gazebo_simulation.trajectory_publisher2:main',
+            'helloise_trajektorie = gazebo_simulation.helloise_trajektorie:main',
+            'aan_control_minimal = gazebo_simulation.aan_control_minimal:main',
+>>>>>>> 2734e32 (feat: aan_control_minimal --> basic script that calculates the actuation torques using exemplary values)
         ],
     },
 )
