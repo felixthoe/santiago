@@ -4,3 +4,4 @@ devel/
 *.log
 install/
 log/model_data/aufstehhilfe_model_LUTs.npz
+model_data/aufstehhilfe_model_LUTs.npz
