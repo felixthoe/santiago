@@ -16,11 +16,11 @@ class ApplyWrenchNode(Node):
         request = ApplyLinkWrench.Request()
         request.link_name = 'robot::arm_first_link' # Gazebo sees the whole kinematic chain of the three arm links as one link (called robot::arm_first_link) since they are connected by fixed joints
         request.reference_frame = 'robot::arm_first_link'  # Can be changed, if you want to specify the wrench vector and reference point in the world frame (then it would be robot::map)
-        request.reference_point.x = -0.34 + 0.02  # 0.34 is the length of the second arm link, 0.02 is the radius of the third arm link
+        request.reference_point.x = -0.314
         request.reference_point.y = 0.0
-        request.reference_point.z = 0.161204 + 2*0.02 + 0.757988/2  # 0.161204 is the length of the first arm link, 2*0.02 is the distance between the arm links (because of the second arm link), 0.757988 is the length of the third arm link
-        request.wrench.force.x = -1e2  # Replace with your desired force
-        request.wrench.force.y = 0.0
+        request.reference_point.z = 1.386
+        request.wrench.force.x = 10.0  # Replace with your desired force
+        request.wrench.force.y = -0.3
         request.wrench.force.z = 0.0
         request.wrench.torque.x = 0.0  # Replace with your desired torque
         request.wrench.torque.y = 0.0

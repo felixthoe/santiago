@@ -177,7 +177,7 @@
     <child link = "column_inside_link" />
     <axis xyz="0 0 1" />
     <dynamics damping="0.5" friction="1.1"/>
-    <limit lower="0" upper="50.0" velocity="100" effort="500000"/>
+    <limit lower="0" upper="50.0" velocity="100" effort="5000"/>
   </joint> 
 
   <!-- lifting_column_inside -->
@@ -466,7 +466,7 @@
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="upper_body_mass" value="40.0"/>
+      <xacro:property name="upper_body_mass" value="50.0"/>
       <mass value="${upper_body_mass}"/>
       <origin xyz="0 0 0.20"/>
       <inertia
@@ -491,18 +491,18 @@
     <visual>
       <origin xyz="0 0 0.275"/>
       <geometry>
-        <box size="0.300 0.080 0.90"/>      
+        <box size="0.300 0.080 0.30"/>      
       </geometry>
       <material name="white"/>
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <box size="0 0 0"/>      
+        <box size="0.300 0.080 0.30"/>      
       </geometry>
     </collision>
     <inertial>
-      <xacro:property name="lower_body_mass" value="30.0"/>
+      <xacro:property name="lower_body_mass" value="0.0"/>
       <mass value="${lower_body_mass}"/>
       <origin xyz="0 0 0.275"/>
       <inertia

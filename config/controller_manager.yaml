@@ -1,16 +1,29 @@
-
 controller_manager:
   ros__parameters:
-    update_rate: 1000  # Hz
+    update_rate: 100
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    effort_controller:
+      type: effort_controllers/JointGroupEffortController
 
     joint_trajectory_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
-    pid_controller:
-      type: pid_controller/PidController
 
-    joint_state_broadcaster:
-      type: joint_state_broadcaster/JointStateBroadcaster
+effort_controller:
+  ros__parameters:
+    joints:
+      - upper_cylinder_upper_motor_joint
+      - column_outside_column_inside_joint
+      - upper_motor_box_arm_joint
+    command_interfaces:
+      - effort
+    state_interfaces:
+      - position
+      - velocity
+
 
 joint_trajectory_controller:
   ros__parameters:
@@ -19,13 +32,12 @@ joint_trajectory_controller:
       - column_outside_column_inside_joint
       - upper_motor_box_arm_joint
     command_interfaces:
-      - position
-      - velocity
+      - effort
     state_interfaces:
       - position
       - velocity
     gains:
-      upper_cylinder_upper_motor_joint: 
+      upper_cylinder_upper_motor_joint:
         p: 200.0
         i: 2.0
         d: 20.0
@@ -37,33 +49,3 @@ joint_trajectory_controller:
         p: 1000.0
         i: 50.0
         d: 50.0
-
-pid_controller:
-  ros__parameters:
-    dof_names:
-      - upper_cylinder_upper_motor_joint
-      - column_outside_column_inside_joint
-      - upper_motor_box_arm_joint
-    command_interface: "effort"
-    reference_and_state_interfaces:
-      - position
-      - velocity
-    gains:
-      upper_cylinder_upper_motor_joint: 
-        p: 200.0
-        i: 2.0
-        d: 20.0
-      column_outside_column_inside_joint:
-        p: 5000.0 #was 500.0 (controller doesn't consider gravity yet so it needs to be stronger)
-        i: 200.0 # was 5.0
-        d: 50.0
-      upper_motor_box_arm_joint:
-        p: 200.0
-        i: 2.0
-        d: 20.0
-
-
-
-
-
-

@@ -35,6 +35,7 @@ setup(
             'trajectory_publisher2 = gazebo_simulation.trajectory_publisher2:main',
             'helloise_trajektorie = gazebo_simulation.helloise_trajektorie:main',
             'aan_control_minimal = gazebo_simulation.aan_control_minimal:main',
+            'apply_joint_effort = gazebo_simulation.apply_joint_effort:main',
         ],
     }
 )

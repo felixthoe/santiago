@@ -14,9 +14,9 @@ def generate_launch_description():
     # Declare the launch argument for the controller
     declare_controller_arg = DeclareLaunchArgument(
         'controller',
-        default_value='joint_trajectory_controller',   # geändert: jetzt sinnvoller Default
+        default_value='effort_controller',   # ← changed
         description='Controller to be used'
-    )
+)
 
     # Access the launch configuration value
     controller = LaunchConfiguration('controller')
@@ -96,13 +96,6 @@ def generate_launch_description():
         'controller_manager.yaml'   # hier liegt Ihre YAML-Datei (Name anpassen falls nötig)
     )
 
-    ros2_control_node = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[{'robot_description': robot_description_raw},
-                    controller_config],
-        output='screen'
-    )
 
     # ---------- Spawner (laden & aktivieren Controller automatisch) ----------
     spawn_joint_state_broadcaster = Node(
@@ -115,7 +108,7 @@ def generate_launch_description():
     spawn_controller = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=[controller],   # der über den Launch-Argument gewählte Controller
+        arguments=[controller],   # will be 'effort_controller' by default
         output='screen'
     )
 
@@ -133,7 +126,6 @@ def generate_launch_description():
         rviz,
         joint_state_publisher,
         node_robot_state_publisher,
-        ros2_control_node,                # startet den Controller Manager mit YAML
         spawn_entity,
         spawn_bed,
         spawn_joint_state_broadcaster,    # wartet automatisch, bis Manager bereit ist
