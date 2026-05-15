@@ -19,11 +19,11 @@ class TrajectoryPublisher(Node):
             point = JointTrajectoryPoint()
 
             if i < 5:
-                point.positions = [float(x) for x in [-(i/4)*np.pi*0.388, 0 + (i/4)*0.1, -(i/4*np.pi)/4]]
-            if i > 4 and i < 10:
-                point.positions = [float(x) for x in [-np.pi*0.388 + ((i-5)/4)*np.pi*0.388, -0.2 - ((i-5)/4)*0.1, -np.pi/4 + ((i-5)/4)*np.pi/4]]
-            if i == 10:
-                point.positions = [float(x) for x in [0, -0.3, 0]]
+                point.positions = [float(x) for x in [-i*0.04 , i*0.5  , - i/4 ]]
+            if i > 4 and i < 9:
+                point.positions = [float(x) for x in [i*0.04, 0 , i/4]]
+            if i >= 9 or i == 10:
+                point.positions = [float(x) for x in [0, 0, 0]]
 
             point.time_from_start.sec = i
             msg.points.append(point)

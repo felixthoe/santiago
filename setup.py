@@ -16,6 +16,7 @@ setup(
         (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*.yaml*'))),
         (os.path.join('share', package_name, 'urdf'), glob(os.path.join('urdf', '*.urdf*'))),
         (os.path.join('share', package_name, 'sdf'), glob(os.path.join('sdf', '*.sdf*'))),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -30,6 +31,11 @@ setup(
             'pid_controller_publisher = gazebo_simulation.pid_controller_publisher:main',
             'apply_wrench = gazebo_simulation.apply_wrench:main',
             'listener = gazebo_simulation.listener:main',
+            'test1 = gazebo_simulation.test1:main',
+            'trajectory_publisher2 = gazebo_simulation.trajectory_publisher2:main',
+            'helloise_trajektorie = gazebo_simulation.helloise_trajektorie:main',
+            'aan_control_minimal = gazebo_simulation.aan_control_minimal:main',
+            'apply_joint_effort = gazebo_simulation.apply_joint_effort:main',
         ],
-    },
+    }
 )

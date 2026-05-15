@@ -1,61 +1,51 @@
 controller_manager:
   ros__parameters:
-    update_rate: 1000  # Hz
-
-    joint_trajectory_controller:
-      type: joint_trajectory_controller/JointTrajectoryController
-
-    pid_controller:
-      type: pid_controller/PidController
+    update_rate: 100
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-joint_trajectory_controller:
+    effort_controller:
+      type: effort_controllers/JointGroupEffortController
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+effort_controller:
   ros__parameters:
     joints:
-      - base_rotation_joint
-      - arm_height_joint
-      - arm_rotation_joint
-    gains:
-      base_rotation_joint: 
-        p: 200.0
-        i: 2.0
-        d: 20.0
-      arm_height_joint:
-        p: 950.0
-        i: 50.0
-        d: 250.0
-      arm_rotation_joint:
-        p: 1000.0
-        i: 50.0
-        d: 50.0
+      - upper_cylinder_upper_motor_joint
+      - column_outside_column_inside_joint
+      - upper_motor_box_arm_joint
     command_interfaces:
       - effort
     state_interfaces:
       - position
       - velocity
 
-pid_controller:
+
+joint_trajectory_controller:
   ros__parameters:
-    dof_names:
-      - base_rotation_joint
-      - arm_height_joint
-      - arm_rotation_joint
-    command_interface: effort
-    reference_and_state_interfaces:
+    joints:
+      - upper_cylinder_upper_motor_joint
+      - column_outside_column_inside_joint
+      - upper_motor_box_arm_joint
+    command_interfaces:
+      - effort
+    state_interfaces:
       - position
       - velocity
     gains:
-      base_rotation_joint: 
+      upper_cylinder_upper_motor_joint:
         p: 200.0
         i: 2.0
         d: 20.0
-      arm_height_joint:
-        p: 500.0
-        i: 5.0
+      column_outside_column_inside_joint:
+        p: 950.0
+        i: 50.0
+        d: 250.0
+      upper_motor_box_arm_joint:
+        p: 1000.0
+        i: 50.0
         d: 50.0
-      arm_rotation_joint:
-        p: 200.0
-        i: 2.0
-        d: 20.0
